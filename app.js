@@ -42,7 +42,9 @@
     $$(`#nav-${lab} button`).forEach(b => b.classList.toggle("active", b.dataset.exp === id));
     $$("article.exp").forEach(a => a.classList.toggle("active", a.id === id));
     try { history.replaceState(null, "", "#" + id); } catch (_) { }
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "auto" });
+    // charts drawn while their article was hidden used a fallback width — redraw now that it is visible
+    requestAnimationFrame(() => { try { redrawAll(); } catch (_) { } });
   }
   labs.forEach(lab => {
     $("#tab-" + lab).addEventListener("click", () => showLab(lab));
@@ -342,10 +344,13 @@
       const v = rows.filter(r => Number.isFinite(r.vin) && Number.isFinite(r.vo)).sort((a, b) => a.vin - b.vin);
       if (v.length < 2) return [];
       // find first pair where zener regulates (Vo change small) — use manual approach: ΔVL/ΔVi over the pair just after turn-on
+      // use the first pair fully inside the regulation region (both points past the knee),
+      // matching the manual: (5.4−5)/(12−11)×100 = 40 %
       let best = null;
+      const knee = 0.8 * Math.max(...v.map(r => r.vo));
       for (let i = 1; i < v.length; i++) {
         const dv = v[i].vo - v[i - 1].vo, di = v[i].vin - v[i - 1].vin;
-        if (v[i].vo > 4.5 && di > 0) { best = 100 * dv / di; break; }
+        if (v[i - 1].vo >= knee && v[i].vo >= knee && di > 0) { best = 100 * dv / di; break; }
       }
       const last = v[v.length - 1], prev = v[v.length - 2];
       const fallback = 100 * (last.vo - prev.vo) / (last.vin - prev.vin);
@@ -891,4 +896,7 @@
     const h = location.hash.slice(1);
     if (h && document.getElementById(h) && h.match(/^(ae|cm)-/)) { showLab(h.slice(0, 2)); showExp(h.slice(0, 2), h); }
   });
+  // responsive charts: redraw at the new width when the viewport changes (rotation, resize)
+  let rsz;
+  window.addEventListener("resize", () => { clearTimeout(rsz); rsz = setTimeout(() => { try { redrawAll(); } catch (_) { } }, 200); });
 })();

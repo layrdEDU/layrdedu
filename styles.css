@@ -90,8 +90,9 @@ header.site {
 .brand .logo {
   width: 36px; height: 36px; border-radius: 9px;
   background: linear-gradient(135deg, var(--accent), #4a3aa7);
-  display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 17px;
+  display: grid; place-items: center; color: #fff;
 }
+.brand .logo svg { width: 24px; height: 24px; display: block; }
 .brand h1 { font-size: 19px; margin: 0; letter-spacing: -.2px; }
 .brand small { display: block; color: var(--muted); font-size: 11.5px; font-weight: 500; margin-top: -3px; }
 
@@ -102,6 +103,7 @@ header.site {
   transition: background .15s, color .15s;
 }
 .lab-tabs button:hover { color: var(--ink); }
+.t-short { display: none; }
 .lab-tabs button.active { background: var(--accent); color: #fff; box-shadow: var(--shadow); }
 
 .theme-btn {
@@ -278,3 +280,68 @@ footer.site {
   text-align: center; padding: 26px 16px 40px;
 }
 kbd.unit { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+
+/* ============ Smartphone optimisation ============ */
+@media (max-width: 700px) {
+  body { font-size: 15px; }
+
+  /* compact stacked header: brand + theme on row 1, full-width tab bar on row 2 */
+  .site-inner { padding: 8px 12px; gap: 8px 10px; }
+  .brand { flex: 1; min-width: 0; }
+  .brand .logo { width: 30px; height: 30px; border-radius: 8px; font-size: 15px; }
+  .brand h1 { font-size: 16.5px; }
+  .brand small { font-size: 10px; }
+  .theme-btn { width: 34px; height: 34px; border-radius: 9px; order: 2; }
+  .lab-tabs { order: 3; margin-left: 0; width: 100%; }
+  .lab-tabs button { flex: 1; padding: 8px 6px; font-size: 12.5px; white-space: nowrap; }
+  .t-long { display: none; }
+  .t-short { display: inline; }
+
+  .wrap { padding: 12px 10px 60px; gap: 14px; }
+
+  /* nav becomes a horizontally scrollable chip row */
+  nav.exp-nav { top: 0; border-radius: 10px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  nav.exp-nav::-webkit-scrollbar { display: none; }
+  nav.exp-nav button { font-size: 12.5px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 999px; }
+  nav.exp-nav button.active { border-color: transparent; }
+
+  .exp-head h2 { font-size: 21px; }
+  .exp-head .kicker { font-size: 10px; padding: 2px 10px; }
+
+  .card { padding: 14px 14px; border-radius: 10px; margin-bottom: 12px; }
+  .card ol, .card ul { padding-left: 18px; }
+  .formula { font-size: 12px; padding: 7px 10px; }
+  .pill { font-size: 11.5px; padding: 2px 10px; }
+  .note { font-size: 13px; padding: 8px 12px; }
+  .result-box { font-size: 13.5px; padding: 10px 12px; }
+
+  /* tables: tighter cells, 16px inputs (prevents iOS focus-zoom) */
+  table.obs { font-size: 12.5px; min-width: 480px; }
+  table.obs th { padding: 6px 6px; font-size: 11.5px; }
+  table.obs td { padding: 3px 5px; }
+  table.obs input { width: 62px; padding: 6px 4px; font-size: 16px; }
+  table.obs td.calc { font-size: 12px; }
+  .tbl-actions { gap: 6px; }
+  button.btn { padding: 8px 12px; font-size: 12.5px; }
+
+  .stat { flex: 1 1 120px; padding: 8px 10px; }
+  .stat .v { font-size: 17px; }
+
+  .calc { padding: 12px; }
+  .calc label { font-size: 12.5px; flex-wrap: wrap; }
+  .calc input, .calc select { width: 96px; font-size: 16px; padding: 6px 8px; }
+  .calc .out { font-size: 12px; }
+
+  .schematic { padding: 4px; }
+  .chart-box .legend { font-size: 11.5px; gap: 10px; }
+  .chart-tip { font-size: 11px; padding: 5px 8px; }
+
+  footer.site { font-size: 12px; padding: 20px 12px 32px; }
+}
+
+/* very narrow phones */
+@media (max-width: 380px) {
+  .lab-tabs button { font-size: 11.5px; padding: 7px 4px; }
+  .exp-head h2 { font-size: 19px; }
+  table.obs input { width: 56px; }
+}

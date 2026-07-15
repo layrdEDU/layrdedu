@@ -45,8 +45,12 @@
   function lineChart(container, cfg) {
     container.classList.add("chart-box");
     container.innerHTML = "";
-    const W = 720, H = cfg.height || 340;
-    const P = { l: 58, r: 18, t: 14, b: 46 };
+    // draw at the container's real width so axis text stays legible on phones
+    const cw = container.clientWidth || (container.parentElement && container.parentElement.clientWidth) || 0;
+    const W = cw > 40 ? Math.max(300, Math.min(760, cw)) : 720;
+    const small = W < 480;
+    const H = cfg.height ? (small ? Math.round(cfg.height * 0.85) : cfg.height) : (small ? 260 : 340);
+    const P = { l: small ? 46 : 58, r: small ? 12 : 18, t: 14, b: small ? 40 : 46 };
 
     const series = (cfg.series || []).map(s => ({
       ...s,
@@ -92,8 +96,8 @@
     const X = v => P.l + (v - xmin) / (xmax - xmin) * (W - P.l - P.r);
     const Y = v => H - P.b - (v - ymin) / (ymax - ymin) * (H - P.t - P.b);
 
-    // grid + ticks
-    const xt = niceTicks(xmin, xmax, 7), yt = niceTicks(ymin, ymax, 6);
+    // grid + ticks (fewer x ticks on narrow screens)
+    const xt = niceTicks(xmin, xmax, small ? 4 : 7), yt = niceTicks(ymin, ymax, small ? 5 : 6);
     yt.forEach(v => {
       svg.appendChild(el("line", { x1: P.l, x2: W - P.r, y1: Y(v), y2: Y(v), stroke: "var(--grid)", "stroke-width": 1 }));
       const t = el("text", { x: P.l - 8, y: Y(v) + 4, "text-anchor": "end", "font-size": 11, fill: "var(--muted)", style: "font-variant-numeric:tabular-nums" });
@@ -142,7 +146,7 @@
       svg.appendChild(c); return c;
     });
 
-    svg.addEventListener("mousemove", ev => {
+    svg.addEventListener("pointermove", ev => {
       const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
       const m = pt.matrixTransform(svg.getScreenCTM().inverse());
       if (m.x < P.l || m.x > W - P.r) { hide(); return; }
@@ -170,6 +174,8 @@
     });
     function hide() { tip.style.display = "none"; cross.setAttribute("opacity", 0); hoverDots.forEach(d => d.setAttribute("opacity", 0)); }
     svg.addEventListener("mouseleave", hide);
+    svg.addEventListener("pointerleave", hide);
+    svg.addEventListener("pointercancel", hide);
   }
 
   /** phasor(container, vectors=[{x,y,color,label}], title) — draws vectors from origin */
