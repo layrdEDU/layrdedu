@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LayrdEDU · Virtual Lab Manuals</title>
+<meta name="description" content="Interactive engineering lab manuals — Analog Electronics and Circuits & Measurements. Enter your readings, get calculations and graphs exactly as in the lab manual.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232a78d6'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'>L</text></svg>">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="site-inner">
+    <div class="brand">
+      <div class="logo">L</div>
+      <div>
+        <h1>LayrdEDU</h1>
+        <small>Interactive Engineering Lab Manuals</small>
+      </div>
+    </div>
+    <div class="lab-tabs" role="tablist">
+      <button id="tab-ae" role="tab">⚡ Analog Electronics Lab</button>
+      <button id="tab-cm" role="tab">🔬 Circuits &amp; Measurements Lab</button>
+    </div>
+    <button id="themeBtn" class="theme-btn" title="Toggle light / dark theme">☾</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ================= NAVIGATION ================= -->
+  <nav class="exp-nav" id="nav-ae">
+    <h2>Experiments</h2>
+    <button data-exp="ae-cro"><span class="n">01</span>Study of Cathode Ray Oscilloscope</button>
+    <button data-exp="ae-rc"><span class="n">02</span>RC Coupled Amplifier</button>
+    <button data-exp="ae-fet"><span class="n">03</span>FET Amplifier</button>
+    <button data-exp="ae-clip"><span class="n">04</span>Clipping &amp; Clamping Circuits</button>
+    <button data-exp="ae-zener"><span class="n">05</span>Zener Diode Regulator</button>
+    <button data-exp="ae-zef"><span class="n">5b</span>Zener with Emitter Follower</button>
+    <button data-exp="ae-opamp"><span class="n">06</span>Op-Amp Circuits</button>
+    <button data-exp="ae-osc"><span class="n">07</span>Phase Shift &amp; Wien Bridge Oscillators</button>
+    <button data-exp="ae-wave"><span class="n">08</span>Waveform Generation (Op-Amp)</button>
+    <button data-exp="ae-schmitt"><span class="n">09</span>Schmitt Trigger</button>
+    <button data-exp="ae-555a"><span class="n">10</span>Astable Multivibrator — IC 555</button>
+    <button data-exp="ae-555m"><span class="n">11</span>Monostable Operation — IC 555</button>
+  </nav>
+
+  <nav class="exp-nav" id="nav-cm" style="display:none">
+    <h2>Experiments</h2>
+    <button data-exp="cm-super"><span class="n">01</span>Verification of Superposition Theorem</button>
+    <button data-exp="cm-rlcs"><span class="n">02</span>RLC Series Circuit</button>
+    <button data-exp="cm-rlcp"><span class="n">03</span>RLC Parallel Circuit</button>
+    <button data-exp="cm-thermo"><span class="n">04</span>Calibration of Thermocouple</button>
+    <button data-exp="cm-wheat"><span class="n">05</span>Wheatstone's Bridge</button>
+    <button data-exp="cm-ctpt"><span class="n">06</span>Wattmeter Range Extension — CT &amp; PT</button>
+    <button data-exp="cm-em"><span class="n">07</span>Calibration of 1-φ Energy Meter</button>
+    <button data-exp="cm-strain"><span class="n">08</span>Calibration of Strain Gauge</button>
+    <button data-exp="cm-lvdt"><span class="n">09</span>Displacement Measurement — LVDT</button>
+  </nav>
+
+  <main>
+
+  <!-- ============================================================
+       ANALOG ELECTRONICS LAB
+  ============================================================= -->
+
+  <!-- ---------- Expt 1 : CRO ---------- -->
+  <article class="exp" id="ae-cro">
+    <div class="exp-head">
+      <span class="kicker">Analog Electronics · Expt No. 1</span>
+      <h2>Study of Cathode Ray Oscilloscope</h2>
+    </div>
+
+    <div class="card"><h3>Aim</h3>
+      <p>To familiarize with the CRO and study its functions — measurement of <strong>voltage, frequency and phase shift</strong>.</p>
+    </div>
+
+    <div class="card"><h3>Components &amp; Equipment</h3>
+      <div class="pill-row"><span class="pill">CRO</span><span class="pill">Function generator</span><span class="pill">Capacitor 0.1 µF</span><span class="pill">Resistors 3.3 kΩ</span></div>
+    </div>
+
+    <div class="card"><h3>Theory</h3>
+      <p>A cathode ray oscilloscope gives a visual representation of electrical signals: the X-axis represents <strong>time</strong> and the Y-axis the <strong>amplitude</strong>. The heart of the CRO is the cathode ray tube (CRT) — a vacuum tube generating a narrow electron beam that strikes a fluorescent screen. The signal to be observed drives the <strong>vertical deflection plates</strong>, while the time-base sweep drives the <strong>horizontal plates</strong>.</p>
+      <p>Key front-panel controls: <strong>INTENS/FOCUS</strong> (beam brightness &amp; sharpness), <strong>VOLTS/DIV</strong> (vertical scale), <strong>TIME/DIV</strong> (horizontal scale), <strong>AC/DC/GND</strong> coupling, <strong>trigger LEVEL</strong>, and <strong>X-Y mode</strong> for Lissajous patterns.</p>
+      <div class="schematic" data-diagram="cro-block"><div class="cap">Block diagram of a CRO</div></div>
+    </div>
+
+    <div class="card"><h3>Procedure</h3>
+      <ol>
+        <li><strong>Amplitude:</strong> obtain a sharp trace, centre it with the AC–DC switch on GND, feed the signal, count the peak-to-peak divisions and multiply by the VOLTS/DIV setting. Half of V(p-p) gives the peak value.</li>
+        <li><strong>Frequency:</strong> show 2–3 cycles with TIME/DIV, count divisions per cycle, multiply by the time-base setting and divide by the magnification factor — this is the time period T; frequency = 1/T.</li>
+        <li><strong>Phase difference:</strong> set up the RC circuit (two 3.3 kΩ / 0.1 µF sections), feed a 2 V sine, view Vin on CH-A and Vo on CH-B in X-Y mode, and compute the phase from the Lissajous ellipse: sin φ = Y₁/Y₂.</li>
+      </ol>
+    </div>
+
+    <div class="card"><h3>Interactive — CRO Measurements</h3>
+      <div class="calc-grid">
+        <div class="calc" data-calc="croAmp">
+          <h4>① Amplitude of a signal</h4>
+          <label>Peak-to-peak divisions<input name="div" value="4" step="0.1"></label>
+          <label>VOLTS/DIV setting (V)<input name="vdiv" value="2" step="any"></label>
+          <div class="out"></div>
+        </div>
+        <div class="calc" data-calc="croFreq">
+          <h4>② Frequency of a signal</h4>
+          <label>Divisions per cycle<input name="div" value="5" step="0.1"></label>
+          <label>TIME/DIV (ms)<input name="tdiv" value="0.2" step="any"></label>
+          <label>Magnification ×<input name="mag" value="1"></label>
+          <div class="out"></div>
+        </div>
+        <div class="calc" data-calc="croPhase">
+          <h4>③ Phase from Lissajous pattern</h4>
+          <label>Y₁ (intercept)<input name="y1" value="2.1" step="any"></label>
+          <label>Y₂ (maximum)<input name="y2" value="3" step="any"></label>
+          <div class="out"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-box"><strong>Result:</strong> Familiarized with the CRO and its controls; measured amplitude, frequency and phase difference of signals.</div>
+  </article>
+
+  <!-- ---------- Expt 2 : RC coupled amplifier ---------- -->
+  <article class="exp" id="ae-rc">
+    <div class="exp-head">
+      <span class="kicker">Analog Electronics · Expt No. 2</span>
+      <h2>RC Coupled Amplifier</h2>
+    </div>
+
+    <div class="card"><h3>Aim</h3>
+      <p>To design and set up an RC coupled <strong>CE amplifier</strong> using a bipolar junction transistor and to plot its frequency response.</p>
+    </div>
+
+    <div class="card"><h3>Components &amp; Equipment</h3>
+      <div class="pill-row"><span class="pill">Transistor BC107</span><span class="pill">DC source 12 V</span><span class="pill">Capacitors</span><span class="pill">Resistors</span><span class="pill">Breadboard</span><span class="pill">Signal generator</span><span class="pill">CRO</span></div>
+    </div>
+
+    <div class="card"><h3>Theory</h3>
+      <p>The RC coupled CE amplifier is widely used at audio frequencies. The base current controls the collector current — a small change in I<sub>B</sub> gives a large change in I<sub>C</sub>. For amplifier action the emitter-base junction is forward biased and the collector-base junction reverse biased. R₁–R₂ form a <strong>voltage-divider bias</strong> that makes the operating point independent of β; the input couples through C<sub>C1</sub> and the output is taken from the collector through C<sub>C2</sub>. R<sub>E</sub> provides current-series feedback stabilising the Q-point, and C<sub>E</sub> bypasses signal currents to ground.</p>
+      <p>Input impedance Z<sub>in</sub> = R₁ ‖ R₂ ‖ (1+h<sub>FE</sub>)r<sub>e</sub> and output impedance Z<sub>out</sub> = R<sub>C</sub> ‖ R<sub>L</sub>, where r<sub>e</sub> = 25 mV / I<sub>E</sub>.</p>
+    </div>
+
+    <div class="card"><h3>Circuit Diagram</h3>
+      <div class="schematic" data-diagram="rc-amp"><div class="cap">RC coupled CE amplifier — designed component values (Fig 4.1)</div></div>
+    </div>
+
+    <div class="card"><h3>Design</h3>
+      <p>Required mid-band gain = 50 → select <strong>BC107</strong> (h<sub>FE</sub>(min) = 100, NPN-Si, audio). DC bias: V<sub>CC</sub> = 12 V, I<sub>C</sub> = 2 mA, V<sub>CE</sub> = 50 % V<sub>CC</sub>.</p>
+      <div class="formula">V_RC = 0.4·V_CC = 4.8 V  →  R_C = 4.8 V / 2 mA = 2.4 kΩ  →  use 2.2 kΩ</div>
+      <div class="formula">V_RE = 0.1·V_CC = 1.2 V  →  R_E = 600 Ω  →  use 680 Ω</div>
+      <div class="formula">I_B = I_C/h_FE = 20 µA ;  V_R2 = V_BE + V_RE = 1.9 V  →  R₂ = 1.9/(9·I_B) ≈ 10.6 k → 10 kΩ ;  R₁ = 10.1/(10·I_B) ≈ 50 k → 47 kΩ</div>
+      <div class="formula">A_V = −r_c/r_e, r_e = 25 mV/2 mA = 12.5 Ω  →  R_L = 845 Ω → use 820 Ω</div>
+      <div class="formula">C_C1 ≥ 1/(2π·f_L·R_in/10) = 14 µF → 15 µF ;  C_C2 = 6.6 µF → 10 µF ;  C_E ≥ 23 µF → 22 µF</div>
+    </div>
+
+    <div class="card"><h3>Procedure</h3>
+      <ol>
+        <li>Test all components; set up the circuit and verify the DC bias conditions (remove input and capacitors while checking).</li>
+        <li>Connect the capacitors; apply a 100 mV(p-p) sine from the function generator; observe input and output together on the CRO.</li>
+        <li>Keeping V<sub>in</sub> = 100 mV constant, vary frequency from 0 → 1 MHz and record the output amplitude in the table.</li>
+        <li>Plot gain (dB) vs log f. Mark log f<sub>L</sub> and log f<sub>H</sub> at 1/√2 of maximum gain (−3 dB).</li>
+        <li>Bandwidth BW = f<sub>H</sub> − f<sub>L</sub>.</li>
+      </ol>
+    </div>
+
+    <div class="card"><h3>Interactive Observation Table &nbsp;·&nbsp; V<sub>in</sub> = 100 mV</h3>
+      <p>Type your measured V₀ for each frequency — gain, log f, the frequency-response graph and the bandwidth are computed live (pre-filled with the manual's readings).</p>
+      <div id="tbl-rc-amp"></div>
+      <div class="chart-box" id="cht-rc-amp"></div>
+    </div>
+
+    <div class="result-box"><strong>Result:</strong> Designed an RC coupled CE amplifier and plotted its frequency response. Manual values: mid-band gain = 29.5 dB, bandwidth ≈ 1.99 MHz.</div>
+  </article>
+
+  <!-- ---------- Expt 3 : FET amplifier ---------- -->
+  <article class="exp" id="ae-fet">
+    <div class="exp-head">
+      <span class="kicker">Analog Electronics · Expt No. 3</span>
+      <h2>FET Amplifier</h2>
+    </div>
+
+    <div class="card"><h3>Aim</h3>
+      <p>To design, set up and plot the frequency response of a <strong>common-source JFET amplifier</strong>.</p>
+    </div>
+
+    <div class="card"><h3>Components &amp; Equipment</h3>
+      <div class="pill-row"><span class="pill">JFET BFW10</span><span class="pill">DC source 12 V</span><span class="pill">Capacitors</span><span class="pill">Resistors</span><span class="pill">Breadboard</span><span class="pill">Signal generator</span><span class="pill">CRO</span></div>
+    </div>
+
+    <div class="card"><h3>Theory</h3>
+      <p>The JFET is a <strong>unipolar, voltage-controlled</strong> device — the gate voltage controls the drain current. Like BJTs, JFET amplifiers come in common-drain, common-source and common-gate configurations; common-source is analogous to common-emitter. Here a <strong>self-bias</strong> circuit is used: it keeps I<sub>D</sub> and the transconductance g<sub>m</sub> relatively constant, giving constant voltage gain. The reverse-biased gate–source junction provides very high input impedance.</p>
+    </div>
+
+    <div class="card"><h3>Circuit Diagram</h3>
+      <div class="schematic" data-diagram="fet-amp"><div class="cap">Common-source JFET amplifier (Fig 5.1) — BFW10 pinout: S · D · G, shield</div></div>
+    </div>
+
+    <div class="card"><h3>Design</h3>
+      <p>Required gain = 15; BFW10/BFW11: R<sub>O</sub> = 40 k, g<sub>m</sub> = 2.5 mA/V at I<sub>D</sub> = 2 mA, V<sub>P</sub> = 8 V. Bias: V<sub>DD</sub> = 12 V, V<sub>GS</sub> = −2 V, V<sub>RD</sub> = 45 % V<sub>DD</sub> = 5.4 V.</p>
+      <div class="formula">R_g = 1 MΩ (negligible gate current) ;  R_s = V_RS/I_D = 2 V / 2 mA = 1 kΩ</div>
+      <div class="formula">R_D = 5.4 V / 2 mA = 2.7 kΩ ;  gain A = g_m·(R_D‖R_L) = 15 → R_L = 4.7 kΩ</div>
+      <div class="formula">C_C1 = C_C2 = 0.022 µF (X_C ≤ R_g/10 @100 Hz) ;  C_s = 15 µF (X_Cs ≤ R_s/10)</div>
+    </div>
+
+    <div class="card"><h3>Procedure</h3>
+      <ol>
+        <li>Set up the circuit on the breadboard; check the DC conditions and apply the sine input at the gate.</li>
+        <li>Record the output amplitude for each input frequency.</li>
+        <li>Plot the frequency response and find the bandwidth from the −3 dB points.</li>
+      </ol>
+    </div>
+
+    <div class="card"><h3>Interactive Observation Table &nbsp;·&nbsp; V<sub>in</sub> = 100 mV</h3>
+      <div id="tbl-fet-amp"></div>
+      <div class="chart-box" id="cht-fet-amp"></div>
+    </div>
+
+    <div class="result-box"><strong>Result:</strong> Designed a common-source JFET amplifier and plotted its frequency response. Manual values: mid-band gain = 12.04 dB, bandwidth ≈ 489 kHz.</div>
+  </article>
+
+  <!-- ---------- Expt 4 : clipping & clamping ---------- -->
+  <article class="exp" id="ae-clip">
+    <div class="exp-head">
+      <span class="kicker">Analog Electronics · Expt No. 4</span>
+      <h2>Clipping &amp; Clamping Circuits</h2>
+    </div>
+
+    <div class="card"><h3>Aim</h3>
+      <p>To design and set up various <strong>clipping</strong> and <strong>clamping</strong> circuits using diodes and observe their characteristics.</p>
+    </div>
+
+    <div class="card"><h3>Components &amp; Equipment</h3>
+      <div class="pill-row"><span class="pill">Diodes 1N4001</span><span class="pill">Resistor 3.3 kΩ</span><span class="pill">Capacitor 1 µF</span><span class="pill">Signal generator</span><span class="pill">DC sources</span><span class="pill">Breadboard</span><span class="pill">CRO</span></div>
+    </div>
+
+    <div class="card"><h3>Theory</h3>
+      <p><strong>Clippers</strong> remove an unwanted portion of a waveform without distorting the remaining part, using the diode as a switch. In a <em>shunt clipper</em> the diode is in parallel with the load. Because of the ~0.6 V diode drop, actual clipping levels shift by 0.6 V (e.g. a +3 V biased clipper clips at +3.6 V). The series resistance is chosen as R = √(R<sub>f</sub>·R<sub>r</sub>) = √(30k × 300k) ≈ 3 kΩ → <strong>3.3 kΩ</strong>.</p>
+      <p><strong>Clampers</strong> add or subtract a DC level without changing the wave shape — a charged capacitor acts as the DC source. Biasing the diode moves the clamping level (biased clamper).</p>
+    </div>
+
+    <div class="two-col">
+      <div class="card"><h3>Clipper Circuit</h3>
+        <div class="schematic" data-diagram="clipper"><div class="cap">Shunt clipper with bias source</div></div>
+      </div>
+      <div class="card"><h3>Clamper Circuit</h3>
+        <div class="schematic" data-diagram="clamper"><div class="cap">Biased clamper (C = 1 µF)</div></div>
+      </div>
+    </div>
+
+    <div class="card"><h3>Procedure</h3>
+      <ol>
+        <li>Set up the circuit; set the generator to a 20 V(p-p) sine.</li>
+        <li>Feed the input to CH-1 of the CRO and the circuit output to CH-2 to view both simultaneously (for clampers keep the CRO input coupling on <strong>DC</strong>).</li>
+        <li>For transfer characteristics feed V<sub>in</sub> → CH-1, V₀ → CH-2 and switch the CRO to X-Y mode.</li>
+        <li>Repeat for every clipper / clamper variant.</li>
+      </ol>
+    </div>
+
+    <div class="card"><h3>Interactive Waveform Simulator</h3>
+      <div class="calc" style="max-width:520px">
+        <label>Circuit
+          <select id="clip-kind" style="width:270px">
+            <optgroup label="Clippers">
+              <option value="pos0">Positive clipper — 0 V</option>
+              <option value="neg0">Negative clipper — 0 V</option>
+              <option value="pos3">Positive clipper — +3 V</option>
+              <option value="posm3">Positive clipper — −3 V</option>
+              <option value="neg3">Negative clipper — +3 V</option>
+              <option value="double3">Double clipper — ±3 V</option>
+              <option value="slicer35">Slicer — +3 V &amp; +5 V</option>
+              <option value="slicerm">Slicer — −5 V &amp; −3 V</option>
+            </optgroup>
+            <optgroup label="Clampers">
+              <option value="clampPos0">Positive clamper — 0 V</option>
+              <option value="clampNeg0">Negative clamper — 0 V</option>
+              <option value="clampPos3">Positive clamper — +3 V</option>
+              <option value="clampPosM3">Positive clamper — −3 V</option>
+              <option value="clampNeg3">Negative clamper — +3 V</option>
+            </optgroup>
+          </select>
+        </label>
+        <label>Include 0.6 V diode drop <input type="checkbox" id="clip-drop" checked style="width:auto"></label>
+      </div>
+      <p class="note" id="clip-desc"></p>
+      <div class="chart-box" id="cht-clipper"></div>
+    </div>
+
+    <div class="result-box"><strong>Result:</strong> Various clipping and clamping circuits were set up; their output waveforms and transfer characteristics were observed.</div>
+  </article>
+
+  <!-- ---------- Expt 5 : zener regulator ---------- -->
+  <article class="exp" id="ae-zener">
+    <div class="exp-head">
+      <span class="kicker">Analog Electronics · Expt No. 5a</span>
+      <h2>Zener Diode Shunt Regulator</h2>
+    </div>
+
+    <div class="card"><h3>Aim</h3>
+      <p>To set up and study a Zener diode shunt regulator and to plot its <strong>line</strong> and <strong>load regulation</strong> characteristics.</p>
+    </div>
+
+    <div class="card"><h3>Components &amp; Equipment</h3>
+      <div class="pill-row"><span class="pill">Zener SZ 5.6</span><span class="pill">Resistor 1 kΩ</span><span class="pill">Rheostat 1.2 kΩ</span><span class="pill">Voltmeter 0–15 V</span><span class="pill">Ammeter 0–100 mA</span><span class="pill">DC source 0–30 V</span><span class="pill">Breadboard</span></div>
+    </div>
+
+    <div class="card"><h3>Theory</h3>
+      <p>A Zener diode is designed to operate in <strong>reverse breakdown</strong>: beyond the Zener voltage V<sub>Z</sub> the current rises sharply while the voltage across the diode stays almost constant — the basis of voltage regulation. The series resistor R<sub>s</sub> limits the Zener current; I<sub>S</sub> = I<sub>Z</sub> + I<sub>L</sub>.</p>
+      <p><strong>Line regulation</strong> (fixed I<sub>L</sub>, variable V<sub>in</sub>): regulation begins once V<sub>in</sub> ≥ V<sub>i(min)</sub> = (R<sub>L</sub>+R<sub>s</sub>)·V<sub>Z</sub>/R<sub>L</sub>. <strong>Load regulation</strong> (fixed V<sub>in</sub>, variable I<sub>L</sub>): the diode stays on while R<sub>L</sub> ≥ R<sub>L(min)</sub> = R<sub>s</sub>·V<sub>Z</sub>/(V<sub>in</sub>−V<sub>Z</sub>), i.e. I<sub>L</sub> ≤ I<sub>L(max)</sub>.</p>
+    </div>
+
+    <div class="card"><h3>Circuit Diagram</h3>
+      <div class="schematic" data-diagram="zener-reg"><div class="cap">Zener shunt regulator — Rs = 1 kΩ, SZ 5.6, RL = 1.2 kΩ rheostat</div></div>
+    </div>
+
+    <div class="card"><h3>Design</h3>
+      <div class="formula">Output V_L = 5.6 V → select 5.6 V zener (P₀ = 0.33 W, r_d = 8 Ω @ I_Z = 10 mA) ;  R_s = 1 kΩ</div>
+      <div class="formula">% line regulation = (ΔV_L / ΔV_in) × 100      % load regulation = (V_NL − V_FL)/V_FL × 100</div>
+    </div>
+
+    <div class="card"><h3>Procedure</h3>
+      <ol>
+        <li><strong>Line regulation:</strong> set I<sub>L</sub> = 5 mA and keep the load fixed. Vary V<sub>in</sub> (7–16 V) and record V₀; plot V₀ vs V<sub>in</sub>.</li>
+        <li><strong>Load regulation:</strong> keep V<sub>in</sub> = 10 V constant; vary R<sub>L</sub> to sweep I<sub>L</sub> 0 → 10 mA and record V₀; plot V₀ vs I<sub>L</sub>. Mark V<sub>NL</sub> and V<sub>FL</sub>.</li>
+      </ol>
+    </div>
+
+    <div class="two-col">
+      <div class="card"><h3>Line Regulation · I<sub>L</sub> = 5 mA</h3>
+        <div id="tbl-zener-line"></div>
+        <div class="chart-box" id="cht-zener-line"></div>
+      </div>
+      <div class="card"><h3>Load Regulation · V<sub>in</sub> = 10 V</h3>
+        <div id="tbl-zener-load"></div>
+        <div class="chart-box" id="cht-zener-load"></div>
+      </div>
+    </div>
+
+    <div class="result-box"><strong>Result:</strong> Studied the shunt Zener regulator and plotted line &amp; load regulation. Manual values: line regulation = 40 %, load regulation = 21.43 %.</div>
+  </article>
+
+  <!-- ---------- Expt 5b : zener + emitter follower ---------- -->
+  <article class="exp" id="ae-zef">
+    <div class="exp-head">
+      <span class="kicker">Analog Electronics · Expt No. 5b</span>
+      <h2>Zener Regulator with Emitter Follower</h2>
+    </div>
+
+    <div class="card"><h3>Aim</h3>
+      <p>To study the performance of a Zener regulator with <strong>emitter-follower output</strong> and plot line and load regulation characteristics.</p>
+    </div>
+
+    <div class="card"><h3>Components &amp; Equipment</h3>
+      <div class="pill-row"><span class="pill">Zener SZ 9.1</span><span class="pill">2N3055 power transistor</span><span class="pill">R_B 330 Ω / 0.5 W</span><span class="pill">Rheostat 820 Ω, 1 A</span><span class="pill">Voltmeter, Ammeter</span><span class="pill">DC source 0–30 V</span></div>
+    </div>
+
+    <div class="card"><h3>Theory</h3>
+      <p>Plain Zener regulators waste power, have limited load current, and V₀ changes with Zener current. The <strong>zener follower</strong> combines a Zener reference with an emitter follower: V₀ = V<sub>Z</sub> − V<sub>BE</sub>, so when the input changes, the transistor absorbs the excess voltage (V₀ = V<sub>in</sub> − V<sub>CE</sub>). The Zener now carries only I<sub>L</sub>/β, and the output impedance is low.</p>
+    </div>
+
+    <div class="card"><h3>Circuit Diagram</h3>
+      <div class="schematic" data-diagram="zener-ef"><div class="cap">Series regulator — SZ 9.1 reference + 2N3055 emitter follower (Fig 7b.1)</div></div>
+    </div>
+
+    <div class="card"><h3>Design</h3>
+      <div class="formula">V₀ = 8.5 V, I_L = 500 mA, V_in = 15 ± 5 V → zener SZ 9.1 ;  2N3055 (Si-NPN, I_C max 15 A, h_FE 20–70)</div>
+      <div class="formula">R_L = V₀/I_L = 17 Ω (5 W) or 820 Ω/1 A rheostat ;  I_B = I_L/20 = 50 mA ;  I_S = I_Z + I_B = 60 mA</div>
+      <div class="formula">R_B(max) = (V_i(max)−V_Z)/60 mA = 635 Ω ;  R_B(min) = (V_i(min)−V_Z)/60 mA = 26 Ω → select 330 Ω, 0.5 W</div>
+    </div>
+
+    <div class="card"><h3>Procedure</h3>
+      <ol>
+        <li>Wire the circuit after testing all components.</li>
+        <li><strong>Line regulation:</strong> with I<sub>L</sub> = 500 mA, vary V<sub>in</sub> 0–30 V in steps and record V₀.</li>
+        <li><strong>Load regulation:</strong> keep V<sub>in</sub> = 15 V; vary I<sub>L</sub> 0 → 500 mA with the rheostat and record V₀.</li>
+        <li>Compute VR = (V<sub>NL</sub> − V<sub>FL</sub>)/V<sub>NL</sub> × 100 %.</li>
+      </ol>
+    </div>
+
+    <div class="two-col">
+      <div class="card"><h3>Line Regulation · I<sub>L</sub> = 500 mA</h3>
+        <div id="tbl-zef-line"></div>
+        <div class="chart-box" id="cht-zef-line"></div>
+      </div>
+      <div class="card"><h3>Load Regulation · V<sub>in</sub> = 15 V</h3>
+        <div id="tbl-zef-load"></div>
+        <div class="chart-box" id="cht-zef-load"></div>
+      </div>
+    </div>
+
+    <div class="result-box"><strong>Result:</strong> Studied the zener + emitter-follower regulator. Manual values: line regulation = 5 %, load regulation = 3.37 %.</div>
+  </article>
+
+  <!-- ---------- Expt 6 : op-amps ---------- -->
+  <article class="exp" id="ae-opamp">
+    <div class="exp-head">
+      <span class="kicker">Analog Electronics · Expt No. 6</span>
+      <h2>Op-Amp Circuits</h2>
+    </div>
+
+    <div class="card"><h3>Aim</h3>
+      <p>To design and set up the basic operational-amplifier circuits: (a) inverting amplifier, (b) non-inverting amplifier, (c) voltage follower, (d) adder, (e) integrator, (f) differentiator.</p>
+    </div>
+
+    <div class="card"><h3>Components &amp; Equipment</h3>
+      <div class="pill-row"><span class="pill">Op-amp 741</span><span class="pill">±15 V supplies</span><span class="pill">Resistors</span><span class="pill">Capacitors</span><span class="pill">Function generator</span><span class="pill">CRO</span><span class="pill">Breadboard</span></div>
+    </div>
+
+    <div class="card"><h3>Principle</h3>
+      <ul>
+        <li><strong>Inverting amplifier</strong> — output is amplified and 180° out of phase. A = −R<sub>f</sub>/R<sub>i</sub>.</li>
+        <li><strong>Non-inverting amplifier</strong> — gain without polarity change. A = 1 + R<sub>f</sub>/R<sub>i</sub>.</li>
+        <li><strong>Voltage follower</strong> — unity gain, very high input impedance; used as a buffer.</li>
+        <li><strong>Adder</strong> — inverted, scaled sum of inputs: V₀ = −R<sub>f</sub>(V₁/R₁ + V₂/R₂).</li>
+        <li><strong>Integrator</strong> — V₀ = −(1/RC)∫V<sub>in</sub>dt; for proper integration T ≥ R<sub>f</sub>C.</li>
+        <li><strong>Differentiator</strong> — V₀ = −R<sub>f</sub>C·dV<sub>in</sub>/dt; gain grows with frequency (stability drawback).</li>
+      </ul>
+    </div>
+
+    <div class="two-col">
+      <div class="card"><h3>Inverting Amplifier</h3>
+        <div class="schematic" data-diagram="opamp-inv"></div>
+      </div>
+      <div class="card"><h3>Non-inverting Amplifier</h3>
+        <div class="schematic" data-diagram="opamp-noninv"></div>
+      </div>
+      <div class="card"><h3>Integrator</h3>
+        <div class="schematic" data-diagram="integrator"></div>
+      </div>
+      <div class="card"><h3>Differentiator</h3>
+        <div class="schematic" data-diagram="differentiator"></div>
+      </div>
+    </div>
+
+    <div class="card"><h3>Procedure</h3>
+      <ol>
+        <li>Inverting amp: feed 2 V(p-p) sine → verify a 20 V(p-p) output, 180° out of phase.</li>
+        <li>Non-inverting amp: feed 2 V(p-p) → verify 22 V(p-p) in phase. Voltage follower: verify 2 V(p-p) in phase.</li>
+        <li>Adder: feed the inputs and verify the summed output.</li>
+        <li>Integrator / differentiator: feed a 1 V, 1 ms square wave; observe the triangular / spike output.</li>
+        <li>Always switch off the signal sources before removing the V+ / V− supplies.</li>
+      </ol>
+    </div>
+
+    <div class="card"><h3>Interactive Design Calculators</h3>
+      <div class="calc-grid">
+        <div class="calc" data-calc="inv"><h4>Inverting amplifier</h4>
+          <label>R<sub>f</sub> (kΩ)<input name="rf" value="10"></label>
+          <label>R<sub>i</sub> (kΩ)<input name="ri" value="1"></label>
+          <label>V<sub>in</sub> (V)<input name="vin" value="1" step="any"></label>
+          <div class="out"></div>
+        </div>
+        <div class="calc" data-calc="noninv"><h4>Non-inverting amplifier</h4>
+          <label>R<sub>f</sub> (kΩ)<input name="rf" value="10"></label>
+          <label>R<sub>i</sub> (kΩ)<input name="ri" value="1"></label>
+          <label>V<sub>in</sub> (V)<input name="vin" value="1" step="any"></label>
+          <div class="out"></div>
+        </div>
+        <div class="calc" data-calc="adder"><h4>Adder (summing)</h4>
+          <label>R<sub>f</sub> (kΩ)<input name="rf" value="10"></label>
+          <label>V₁ (V) / R₁ (kΩ)<input name="v1" value="1" step="any"><input name="r1" value="10"></label>
+          <label>V₂ (V) / R₂ (kΩ)<input name="v2" value="0.5" step="any"><input name="r2" value="10"></label>
+          <div class="out"></div>
+        </div>
+        <div class="calc" data-calc="integ"><h4>Integrator</h4>
+          <label>R (kΩ)<input name="r" value="15"></label>
+          <label>R<sub>f</sub> (kΩ)<input name="rf" value="150"></label>
+          <label>C (µF)<input name="c" value="0.01" step="any"></label>
+          <div class="out"></div>
+        </div>
+        <div class="calc" data-calc="diff"><h4>Differentiator</h4>
+          <label>R<sub>f</sub> (kΩ)<input name="rf" value="5.6"></label>
+          <label>C₁ (µF)<input name="c" value="0.1" step="any"></label>
+          <div class="out"></div>
+        </div>
+      </div>
+      <p class="note">Manual design: inverting — R<sub>i</sub> = 1 k, R<sub>f</sub> = 10 k (A = −10); non-inverting — A = 11; follower — R<sub>f</sub> = 0 (A = 1); integrator — C = 0.01 µF, R = 15 k, R<sub>f</sub> = 150 k (break f = 100 Hz); differentiator — T = 2πR<sub>f</sub>C = 1 ms.</p>
+    </div>
+
+    <div class="result-box"><strong>Result:</strong> Designed and set up the inverting amplifier, non-inverting amplifier, voltage follower, adder, integrator and differentiator, and verified their outputs.</div>
+  </article>
+
+  <!-- ---------- Expt 7 : oscillators ---------- -->
+  <article class="exp" id="ae-osc">
+    <div class="exp-head">
+      <span class="kicker">Analog Electronics · Expt No. 7</span>
+      <h2>RC Phase Shift &amp; Wien Bridge Oscillators</h2>
+    </div>
+
+    <div class="card"><h3>Aim</h3>
+      <p>To design and set up (a) an <strong>RC phase-shift oscillator</strong> for 1 kHz, and (b) a <strong>Wien bridge oscillator</strong> with amplitude stabilization.</p>
+    </div>
+
+    <div class="card"><h3>Components &amp; Equipment</h3>
+      <div class="pill-row"><span class="pill">Op-amp 741</span><span class="pill">JFET BFW10 (Wien AGC)</span><span class="pill">Diode</span><span class="pill">Potentiometers</span><span class="pill">R, C components</span><span class="pill">±15 V DC</span><span class="pill">CRO</span></div>
+    </div>
+
+    <div class="card"><h3>Theory</h3>
+      <p><strong>Phase-shift oscillator:</strong> an inverting op-amp (180° shift) plus three cascaded RC sections contributing another 180° satisfies the Barkhausen criterion (total 360°). Oscillation frequency f₀ = 1/(2π√6·RC); the amplifier gain must be at least <strong>29</strong> (kept slightly higher so oscillations don't die out).</p>
+      <p><strong>Wien bridge oscillator:</strong> a non-inverting amplifier with a series-RC / parallel-RC positive-feedback network; f₀ = 1/(2πRC) and required gain 1 + R<sub>f</sub>/R₁ = 3. An n-channel JFET acting as a voltage-controlled resistor with a diode negative-peak detector stabilizes the amplitude: rising output makes the gate more negative, the drain–source resistance rises and the gain falls back.</p>
+    </div>
+
+    <div class="two-col">
+      <div class="card"><h3>Phase-Shift Oscillator</h3>
+        <div class="schematic" data-diagram="phase-shift"><div class="cap">Three RC sections (R = 680 Ω, C = 0.1 µF) in the feedback path</div></div>
+      </div>
+      <div class="card"><h3>Wien Bridge Oscillator</h3>
+        <div class="schematic" data-diagram="wien"><div class="cap">Wien network + JFET amplitude stabilisation</div></div>
+      </div>
+    </div>
+
+    <div class="card"><h3>Design</h3>
+      <div class="formula">Phase shift: f₀ = 1/(2π√6·RC) = 1 kHz ;  C = 0.1 µF → R = 650 Ω (use 680 Ω) ;  R₁ = 1.5 k, R_f = 33 k + 10 k pot (gain ≥ 29)</div>
+      <div class="formula">Wien: f₀ = 1/(2πRC) ;  C = 0.1 µF → R = 1.6 k (use 1.5 k) ;  gain = 1 + R_f/R₁ = 3 ;  R₁ = 1 k, R_f = 2.2 k (4.7 k pot) ;  R_s = 1 MΩ, C_s = 0.1 µF</div>
+    </div>
+
+    <div class="card"><h3>Procedure</h3>
+      <ol>
+        <li>Verify the op-amp (and JFET) are in good condition; set up the circuit.</li>
+        <li>Note the frequency and amplitude of the output waveform on the CRO.</li>
+        <li>Phase-shift: interchange R and C and repeat. Wien: vary the gain pot and confirm the amplitude stays constant.</li>
+      </ol>
+    </div>
+
+    <div class="card"><h3>Interactive Design Calculators</h3>
+      <div class="calc-grid">
+        <div class="calc" data-calc="psosc"><h4>RC phase-shift oscillator</h4>
+          <label>R (kΩ)<input name="r" value="0.68" step="any"></label>
+          <label>C (µF)<input name="c" value="0.1" step="any"></label>
+          <label>Measured T (ms)<input name="t" value="1.1" step="any"></label>
+          <div class="out"></div>
+        </div>
+        <div class="calc" data-calc="wien"><h4>Wien bridge oscillator</h4>
+          <label>R (kΩ)<input name="r" value="1.5" step="any"></label>
+          <label>C (µF)<input name="c" value="0.1" step="any"></label>
+          <label>Measured T (ms)<input name="t" value="1" step="any"></label>
+          <div class="out"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-box"><strong>Result:</strong> Phase-shift oscillator — amplitude 11 V, T = 1.1 ms, f = 909.09 Hz. Wien bridge — amplitude 11 V (constant when gain varied), T = 1 ms, f = 1 kHz.</div>
+  </article>
+
+  <!-- ---------- Expt 8 : waveform generation ---------- -->
+  <article class="exp" id="ae-wave">
+    <div class="exp-head">
+      <span class="kicker">Analog Electronics · Expt No. 8</span>
+      <h2>Waveform Generation using Op-Amp</h2>
+    </div>
+
+    <div class="card"><h3>Aim</h3>
+      <p>To set up and study (a) a <strong>triangular wave generator</strong> for 1 kHz and (b) a <strong>saw-tooth wave generator</strong> using op-amps.</p>
+    </div>
+
+    <div class="card"><h3>Components &amp; Equipment</h3>
+      <div class="pill-row"><span class="pill">2 × Op-amp 741</span><span class="pill">±15 V supplies</span><span class="pill">Potentiometer 20 kΩ</span><span class="pill">Resistors</span><span class="pill">Capacitor 0.1 µF</span><span class="pill">CRO</span></div>
+    </div>
+
+    <div class="card"><h3>Theory</h3>
+      <p>Two op-amps are used: A₁ as a <strong>comparator</strong> and A₂ as an <strong>integrator</strong>. When A₁ sits at +V<sub>sat</sub>, the integrator output ramps negative; when the divider point P crosses 0 V the comparator flips to −V<sub>sat</sub> and the ramp reverses — generating a triangular wave. Frequency f = R₁/(4·R₂·R₃·C) and peak-to-peak output V₀(p-p) = 2·(R₂/R₁)·V<sub>sat</sub>.</p>
+      <p>A <strong>saw-tooth</strong> is a triangular wave whose rise and fall times differ. Injecting a variable DC voltage (potentiometer) into the integrator's non-inverting input skews the duty cycle: wiper toward −V lengthens the rise time; toward +V lengthens the fall. Saw-tooth generators are used in time-base and PWM circuits.</p>
+    </div>
+
+    <div class="card"><h3>Circuit Diagram</h3>
+      <div class="schematic" data-diagram="tri-gen"><div class="cap">Triangular wave generator — comparator (A₁) + integrator (A₂); for saw-tooth, a 20 k pot feeds the A₂ (+) input</div></div>
+    </div>
+
+    <div class="card"><h3>Design</h3>
+      <div class="formula">f = R₁/(4·R₂·R₃·C) = 1 kHz ;  V₀(p-p) = 2·(R₂/R₁)·V_sat = 5 V with V_sat = 13 V</div>
+      <div class="formula">R₁ = 1 kΩ, R₂ = 180 Ω, C = 0.1 µF → R₃ = 13 k (use 12 k) ;  saw-tooth: add R₄ = 20 kΩ pot</div>
+    </div>
+
+    <div class="card"><h3>Procedure</h3>
+      <ol>
+        <li>Verify both op-amps; set up the triangular wave generator.</li>
+        <li>Observe the outputs of both op-amps (square at A₁, triangle at A₂); vary R₁, R₂, R₃ and observe the frequency change.</li>
+        <li>For the saw-tooth, move the pot wiper both directions and note the rise/fall-time change.</li>
+      </ol>
+    </div>
+
+    <div class="card"><h3>Interactive Design Calculator</h3>
+      <div class="calc-grid">
+        <div class="calc" data-calc="trigen"><h4>Triangular / saw-tooth generator</h4>
+          <label>R₁ (kΩ)<input name="r1" value="1" step="any"></label>
+          <label>R₂ (Ω)<input name="r2" value="180" step="any"></label>
+          <label>R₃ (kΩ)<input name="r3" value="12" step="any"></label>
+          <label>C (µF)<input name="c" value="0.1" step="any"></label>
+          <label>V<sub>sat</sub> (V)<input name="vsat" value="13" step="any"></label>
+          <div class="out"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-box"><strong>Result:</strong> Triangular wave generator set up — time period 0.7 ms, V<sub>sat</sub> = 11 V, V<sub>out</sub> = 4 V. Saw-tooth output obtained on the CRO.</div>
+  </article>
+
+  <!-- ---------- Expt 9 : Schmitt trigger ---------- -->
+  <article class="exp" id="ae-schmitt">
+    <div class="exp-head">
+      <span class="kicker">Analog Electronics · Expt No. 9</span>
+      <h2>Schmitt Trigger</h2>
+    </div>
+
+    <div class="card"><h3>Aim</h3>
+      <p>To design and set up a Schmitt trigger using an op-amp for <strong>LTP = 2 V</strong> and <strong>UTP = 3 V</strong>.</p>
+    </div>
+
+    <div class="card"><h3>Components &amp; Equipment</h3>
+      <div class="pill-row"><span class="pill">Op-amp 741</span><span class="pill">±15 V supplies</span><span class="pill">Resistors</span><span class="pill">V<sub>ref</sub> source 2.5 V</span><span class="pill">Function generator</span><span class="pill">CRO</span></div>
+    </div>
+
+    <div class="card"><h3>Theory</h3>
+      <p>The Schmitt trigger is a comparator with <strong>positive feedback</strong> — it converts any irregular waveform into a square wave ("squaring circuit"). The output switches whenever the input crosses the <strong>upper (UTP)</strong> or <strong>lower (LTP)</strong> threshold set by the R₁–R₂ divider and V<sub>ref</sub>. The threshold across R₂ depends on the output polarity: UTP applies when V₀ = +V<sub>sat</sub>, LTP when V₀ = −V<sub>sat</sub>.</p>
+    </div>
+
+    <div class="card"><h3>Circuit Diagram</h3>
+      <div class="schematic" data-diagram="schmitt"><div class="cap">Schmitt trigger — R₁ = 22 k (design 2.5 k), R₂ = 1 k, V_ref = 2.5 V</div></div>
+    </div>
+
+    <div class="card"><h3>Design</h3>
+      <div class="formula">UTP = +V_sat·R₂/(R₁+R₂) + V_ref·R₁/(R₁+R₂) = 3 V</div>
+      <div class="formula">LTP = −V_sat·R₂/(R₁+R₂) + V_ref·R₁/(R₁+R₂) = 2 V</div>
+      <div class="formula">With V_sat = 13 V → R₂ = 1 kΩ, R₁ = 2.5 kΩ, V_ref = 2.5 V</div>
+    </div>
+
+    <div class="card"><h3>Procedure</h3>
+      <ol>
+        <li>Verify the op-amp IC is in good condition.</li>
+        <li>Set up the circuit and switch on the supply.</li>
+        <li>Feed a sine input and observe input and output waveforms on the CRO; measure UTP, LTP and V<sub>sat</sub>.</li>
+      </ol>
+    </div>
+
+    <div class="card"><h3>Interactive — Thresholds &amp; Observation</h3>
+      <div class="calc-grid">
+        <div class="calc" data-calc="schmitt"><h4>Threshold calculator</h4>
+          <label>R₁ (kΩ)<input name="r1" value="2.5" step="any"></label>
+          <label>R₂ (kΩ)<input name="r2" value="1" step="any"></label>
+          <label>V<sub>sat</sub> (V)<input name="vsat" value="13" step="any"></label>
+          <label>V<sub>ref</sub> (V)<input name="vref" value="2.5" step="any"></label>
+          <div class="out"></div>
+        </div>
+      </div>
+      <div id="tbl-schmitt"></div>
+    </div>
+
+    <div class="result-box"><strong>Result:</strong> Schmitt trigger set up; expected waveforms obtained. Observed: UTP = 2.8 V, LTP = 1.8 V, V<sub>sat</sub> = 11 V.</div>
+  </article>
+
+  <!-- ---------- Expt 10 : 555 astable ---------- -->
+  <article class="exp" id="ae-555a">
+    <div class="exp-head">
+      <span class="kicker">Analog Electronics · Expt No. 10</span>
+      <h2>Astable Multivibrator using IC 555</h2>
+    </div>
+
+    <div class="card"><h3>Aim</h3>
+      <p>To design and set up an <strong>astable multivibrator</strong> using the 555 timer for a frequency of 1 kHz.</p>
+    </div>
+
+    <div class="card"><h3>Components &amp; Equipment</h3>
+      <div class="pill-row"><span class="pill">IC 555</span><span class="pill">DC source 10 V</span><span class="pill">R_a = R_b = 6.8 kΩ</span><span class="pill">C = 0.1 µF, C₁ = 0.01 µF</span><span class="pill">Breadboard</span><span class="pill">CRO</span></div>
+    </div>
+
+    <div class="card"><h3>Theory</h3>
+      <p>The timing capacitor C charges toward V<sub>CC</sub> through R<sub>a</sub> + R<sub>b</sub>. When its voltage reaches <strong>⅔ V<sub>CC</sub></strong> the upper comparator triggers the internal flip-flop, the discharge transistor turns on, and C discharges through R<sub>b</sub> until it reaches <strong>⅓ V<sub>CC</sub></strong>, when the lower comparator flips it back. The capacitor therefore oscillates between ⅓ and ⅔ V<sub>CC</sub> forever — no stable state.</p>
+      <div class="formula">t_c = 0.69·(R_a + R_b)·C      t_d = 0.69·R_b·C      f = 1/(t_c + t_d)</div>
+    </div>
+
+    <div class="card"><h3>Circuit Diagram</h3>
+      <div class="schematic" data-diagram="astable-555"><div class="cap">555 astable — Ra = Rb = 6.8 kΩ, C = 0.1 µF, C₁ = 0.01 µF on pin 5</div></div>
+    </div>
+
+    <div class="card"><h3>Design</h3>
+      <div class="formula">V_CC = 10 V, t_c = 1 ms, t_d = 0.5 ms ;  C = 0.1 µF → R_a = R_b = 6.8 kΩ ;  C₁ = 0.01 µF</div>
+    </div>
+
+    <div class="card"><h3>Procedure</h3>
+      <ol>
+        <li>Verify the IC and set up the circuit.</li>
+        <li>Observe the waveforms at pin 3 (output) and pin 6 (capacitor voltage) on the CRO.</li>
+        <li>Measure t<sub>c</sub>, t<sub>d</sub>, ⅔V<sub>CC</sub> and ⅓V<sub>CC</sub>; compare with theoretical values.</li>
+      </ol>
+    </div>
+
+    <div class="card"><h3>Interactive — Design &amp; Observation</h3>
+      <div class="calc-grid">
+        <div class="calc" data-calc="astable"><h4>Astable design calculator</h4>
+          <label>R<sub>a</sub> (kΩ)<input name="ra" value="6.8" step="any"></label>
+          <label>R<sub>b</sub> (kΩ)<input name="rb" value="6.8" step="any"></label>
+          <label>C (µF)<input name="c" value="0.1" step="any"></label>
+          <label>V<sub>CC</sub> (V)<input name="vcc" value="10" step="any"></label>
+          <div class="out"></div>
+        </div>
+      </div>
+      <div id="tbl-astable"></div>
+    </div>
+
+    <div class="result-box"><strong>Result:</strong> Astable multivibrator designed with IC 555. Observed: maximum (⅔V<sub>CC</sub>) = 8 V, minimum (⅓V<sub>CC</sub>) = 3.5 V, t<sub>c</sub> = 0.6 ms, t<sub>d</sub> = 0.3 ms.</div>
+  </article>
+
+  <!-- ---------- Expt 11 : 555 monostable ---------- -->
+  <article class="exp" id="ae-555m">
+    <div class="exp-head">
+      <span class="kicker">Analog Electronics · Expt No. 11</span>
+      <h2>IC 555 Timer in Monostable Operation</h2>
+    </div>
+
+    <div class="card"><h3>Aim</h3>
+      <p>To design a <strong>monostable multivibrator</strong> using IC 555 and compare its theoretical and practical pulse widths.</p>
+    </div>
+
+    <div class="card"><h3>Components &amp; Equipment</h3>
+      <div class="pill-row"><span class="pill">IC 555</span><span class="pill">R = 10 kΩ, C = 0.1 µF</span><span class="pill">Trigger network (10 k, 0.01 µF, 1N4007)</span><span class="pill">Function generator</span><span class="pill">CRO + probes</span><span class="pill">Breadboard</span></div>
+    </div>
+
+    <div class="card"><h3>Theory</h3>
+      <p>The monostable ("one-shot") has a single stable state: output low, discharge transistor on, C shorted. A <strong>negative trigger</strong> at pin 2 turns the transistor off and drives the output high; C charges toward V<sub>CC</sub> through R. When v<sub>C</sub> reaches ⅔ V<sub>CC</sub> the upper comparator resets the flip-flop, the output goes low and C discharges rapidly. The high time is:</p>
+      <div class="formula">t_p = 1.1·R·C</div>
+      <p>Once triggered, the output remains high for t<sub>p</sub> even if further triggers arrive during the interval; a reset pulse during the timing interval terminates the output pulse.</p>
+    </div>
+
+    <div class="card"><h3>Circuit Diagram</h3>
+      <div class="schematic" data-diagram="mono-555"><div class="cap">555 monostable — pins: 1 GND, 2 trigger, 3 output, 4 reset, 5 control, 6 threshold, 7 discharge, 8 V_CC</div></div>
+    </div>
+
+    <div class="card"><h3>Procedure</h3>
+      <ol>
+        <li>Connect the circuit; switch on the supply.</li>
+        <li>Apply a 1 kHz, ~9 V(p-p) square wave through the trigger network to pin 2.</li>
+        <li>View the trigger on CH-1 and the output (pin 3) on CH-2; note the pulse width and amplitude.</li>
+        <li>Observe the capacitor voltage; compare practical t<sub>p</sub> with the theoretical value 1.1RC.</li>
+      </ol>
+    </div>
+
+    <div class="card"><h3>Interactive — Pulse Width</h3>
+      <div class="calc-grid">
+        <div class="calc" data-calc="mono"><h4>Monostable calculator</h4>
+          <label>R (kΩ)<input name="r" value="10" step="any"></label>
+          <label>C (µF)<input name="c" value="0.1" step="any"></label>
+          <label>Measured t<sub>p</sub> (ms)<input name="tm" value="1.1" step="any"></label>
+          <div class="out"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-box"><strong>Result:</strong> Designed a monostable multivibrator using IC 555 and obtained its waveforms; practical pulse width matched t<sub>p</sub> = 1.1RC.</div>
+  </article>
+
+  <!-- ============================================================
+       CIRCUITS & MEASUREMENTS LAB
+  ============================================================= -->
+
+  <!-- ---------- CM 1 : superposition ---------- -->
+  <article class="exp" id="cm-super">
+    <div class="exp-head">
+      <span class="kicker">Circuits &amp; Measurements · Expt No. 1</span>
+      <h2>Verification of Superposition Theorem</h2>
+    </div>
+
+    <div class="card"><h3>Aim</h3>
+      <p>To verify the <strong>Superposition theorem</strong> in a DC circuit.</p>
+    </div>
+
+    <div class="card"><h3>Apparatus</h3>
+      <div class="pill-row"><span class="pill">Voltmeter MC 0–30 V × 2</span><span class="pill">Ammeter MC 0–5 A</span><span class="pill">Ammeter MC 0–2 A × 2</span><span class="pill">Ammeter MC 0–1 A × 2</span><span class="pill">Rheostat 19 Ω, 8.5 A × 3</span></div>
+    </div>
+
+    <div class="card"><h3>Principle</h3>
+      <p>In an active, linear network with several sources, the response (branch current or voltage) in any branch equals the <strong>algebraic sum of the responses of each source acting alone</strong>, all other sources being made inoperative — a voltage source is replaced by a short circuit (plus its internal resistance) and a current source by an open circuit.</p>
+      <p><strong>Limitations:</strong> not applicable to circuits with only dependent sources, to non-linear elements (diode, transistor), or to power calculation (power ∝ I² or V²).</p>
+    </div>
+
+    <div class="card"><h3>Circuit Diagram</h3>
+      <div class="schematic" data-diagram="superposition"><div class="cap">Step 1: both E₁ &amp; E₂ acting. Step 2: E₁ alone (E₂ shorted). Step 3: E₂ alone (E₁ shorted).</div></div>
+    </div>
+
+    <div class="card"><h3>Procedure</h3>
+      <ol>
+        <li>Connect as in figure (A); switch on both DC supplies E₁ and E₂; for different voltage settings note all meter readings (I₁, I₂, I₃).</li>
+        <li>Switch off; reconnect as (B) with E₁ alone at the same setting; note I₁′, I₂′, I₃′.</li>
+        <li>Reconnect as (C) with E₂ alone at the same setting; note I₁″, I₂″, I₃″.</li>
+        <li>Verify I₁ = I₁′+I₁″, I₂ = I₂′+I₂″, I₃ = I₃′+I₃″; then disconnect after switching off.</li>
+      </ol>
+    </div>
+
+    <div class="card"><h3>Interactive Tabular Column</h3>
+      <p>Enter the three sets of ammeter readings (currents from the "alone" steps carry sign — use negative values where the direction reverses). The sums and the verification check update live.</p>
+      <div id="tbl-super"></div>
+    </div>
+
+    <div class="result-box"><strong>Result:</strong> Superposition theorem verified — each branch current with both sources equals the algebraic sum of the currents due to each source acting alone.</div>
+  </article>
+
+  <!-- ---------- CM 2 : RLC series ---------- -->
+  <article class="exp" id="cm-rlcs">
+    <div class="exp-head">
+      <span class="kicker">Circuits &amp; Measurements · Expt No. 2</span>
+      <h2>RLC Series Circuit</h2>
+    </div>
+
+    <div class="card"><h3>Aim</h3>
+      <p>To determine the <strong>impedance, admittance, power factor, active / reactive / apparent power</strong> in an RLC series circuit and to draw the vector diagram.</p>
+    </div>
+
+    <div class="card"><h3>Apparatus</h3>
+      <div class="pill-row"><span class="pill">Voltmeter MI 0–250 V × 3</span><span class="pill">Voltmeter MI 0–500 V</span><span class="pill">Ammeters MI 0–5/2/1 A</span><span class="pill">Rheostat 145 Ω, 2.8 A</span><span class="pill">Capacitor 10 µF</span><span class="pill">Inductor</span><span class="pill">1φ autotransformer</span></div>
+    </div>
+
+    <div class="card"><h3>Principle</h3>
+      <div class="formula">V_R = I·R   V_L = I·X_L   V_C = I·X_C   V = √(V_R² + (V_L − V_C)²)</div>
+      <div class="formula">Z = V/I   Y = 1/Z   cos φ = V_R/V   P = VI·cosφ (W)   Q = VI·sinφ (VAR)   S = VI (VA)</div>
+      <p>If V<sub>L</sub> &gt; V<sub>C</sub> the power factor is <strong>lagging</strong>; if V<sub>C</sub> &gt; V<sub>L</sub> it is <strong>leading</strong>.</p>
+    </div>
+
+    <div class="card"><h3>Circuit Diagram</h3>
+      <div class="schematic" data-diagram="rlc-series"><div class="cap">RLC series circuit fed through a 1-φ autotransformer</div></div>
+    </div>
+
+    <div class="card"><h3>Procedure</h3>
+      <ol>
+        <li>Connect as in figure with the autotransformer at minimum and the 145 Ω rheostat at maximum; switch on.</li>
+        <li>Raise the autotransformer until the voltmeter reads the rated 230 V.</li>
+        <li>Vary the rheostat and record all meter readings each time — take at least 6 sets.</li>
+        <li>Return the autotransformer to minimum, switch off and disconnect.</li>
+      </ol>
+    </div>
+
+    <div class="card"><h3>Interactive Tabular Column &amp; Vector Diagram</h3>
+      <div id="tbl-rlcs"></div>
+      <div class="two-col">
+        <div>
+          <p class="note">The phasor diagram below is drawn from the <strong>first complete row</strong>: V_R along the current axis, V_L up, V_C down, and the resultant V.</p>
+        </div>
+        <div class="chart-box" id="phasor-rlcs"></div>
+      </div>
+    </div>
+
+    <div class="result-box"><strong>Result:</strong> Impedance, admittance, power factor, active, reactive and apparent power of the RLC series circuit determined; vector diagram drawn.</div>
+  </article>
+
+  <!-- ---------- CM 3 : RLC parallel ---------- -->
+  <article class="exp" id="cm-rlcp">
+    <div class="exp-head">
+      <span class="kicker">Circuits &amp; Measurements · Expt No. 3</span>
+      <h2>RLC Parallel Circuit</h2>
+    </div>
+
+    <div class="card"><h3>Aim</h3>
+      <p>To determine the <strong>impedance, admittance, power factor, active / reactive / apparent power</strong> in an RLC parallel circuit and to draw the vector diagram.</p>
+    </div>
+
+    <div class="card"><h3>Apparatus</h3>
+      <div class="pill-row"><span class="pill">Voltmeter MI 0–250 V</span><span class="pill">Ammeters MI 0–5/2/1 A</span><span class="pill">Rheostat 145 Ω, 2.8 A</span><span class="pill">Capacitor 10 µF</span><span class="pill">Inductor</span><span class="pill">1φ autotransformer</span></div>
+    </div>
+
+    <div class="card"><h3>Principle</h3>
+      <div class="formula">I_R = V/R   I_L = V/X_L   I_C = V/X_C   I = √(I_R² + (I_L − I_C)²)</div>
+      <div class="formula">Y = I/V   Z = 1/Y   cos φ = I_R/I   P = VI·cosφ   Q = VI·sinφ   S = VI</div>
+      <p>If I<sub>L</sub> &gt; I<sub>C</sub> the power factor is <strong>lagging</strong>; if I<sub>C</sub> &gt; I<sub>L</sub> it is <strong>leading</strong>.</p>
+    </div>
+
+    <div class="card"><h3>Circuit Diagram</h3>
+      <div class="schematic" data-diagram="rlc-parallel"><div class="cap">RLC parallel circuit — branch ammeters I_R, I_C, I_L</div></div>
+    </div>
+
+    <div class="card"><h3>Procedure</h3>
+      <ol>
+        <li>Connect as in figure — autotransformer at minimum, rheostat at maximum; switch on.</li>
+        <li>Set the supply to the rated 230 V with the autotransformer.</li>
+        <li>Vary the 145 Ω rheostat; note all meter readings each time (≥ 6 sets).</li>
+        <li>Bring the autotransformer to minimum, switch off, disconnect.</li>
+      </ol>
+    </div>
+
+    <div class="card"><h3>Interactive Tabular Column &amp; Vector Diagram</h3>
+      <div id="tbl-rlcp"></div>
+      <div class="two-col">
+        <div>
+          <p class="note">Phasor diagram from the first complete row: I_R along V, I_C up, I_L down, resultant I.</p>
+        </div>
+        <div class="chart-box" id="phasor-rlcp"></div>
+      </div>
+    </div>
+
+    <div class="result-box"><strong>Result:</strong> Impedance, admittance, power factor, active, reactive and apparent power of the RLC parallel circuit determined; vector diagram drawn.</div>
+  </article>
+
+  <!-- ---------- CM 4 : thermocouple ---------- -->
+  <article class="exp" id="cm-thermo">
+    <div class="exp-head">
+      <span class="kicker">Circuits &amp; Measurements · Expt No. 4</span>
+      <h2>Calibration of Thermocouple using Thermometer</h2>
+    </div>
+
+    <div class="card"><h3>Aim</h3>
+      <p>To calibrate the given thermocouple using a thermometer, measure temperature with the thermocouple sensor, and plot the calibration curve (indicated reading vs % error).</p>
+    </div>
+
+    <div class="card"><h3>Principle</h3>
+      <p>A thermocouple works on the <strong>Seebeck effect</strong> — joining two dissimilar metals produces a thermoelectric potential at the junction. Electrons diffuse across the interface until the electric field balances the diffusion force; since that force depends on temperature, the junction potential measures temperature:</p>
+      <div class="formula">E₀ = C₁(T₁ − T₂) + C₂(T₁² − T₂²)</div>
+      <p>The trainer comprises a regulated <strong>power supply</strong> (+12/−12 V, +5/−5 V), <strong>signal conditioning &amp; amplification</strong>, and a 3½-digit <strong>ADC display</strong> (IC 7107). Panel: INITIAL SET and FINAL SET potentiometers, sensor SELECT switch (RTD / thermocouple / thermistor), power switch.</p>
+      <div class="schematic" data-diagram="thermocouple"><div class="cap">Thermocouple junction and measuring circuit</div></div>
+    </div>
+
+    <div class="card"><h3>Procedure</h3>
+      <ol>
+        <li>Check connections; switch on and allow 10 minutes warm-up.</li>
+        <li>Fill ~¾ of the kettle with water; place the sensor and thermometer inside.</li>
+        <li>Note the initial water temperature; select the thermocouple on the selector switch.</li>
+        <li>Adjust <strong>INITIAL SET</strong> until the display reads the initial temperature.</li>
+        <li>Boil the water; adjust <strong>FINAL SET</strong> until the display reads the boiling temperature.</li>
+        <li>Move the sensor to cold water and re-set with INITIAL SET; tabulate thermometer vs indicated readings in steps of 10 °C.</li>
+      </ol>
+    </div>
+
+    <div class="card"><h3>Interactive Observation Table</h3>
+      <div id="tbl-thermo"></div>
+      <div class="two-col">
+        <div class="chart-box" id="cht-thermo-cal"></div>
+        <div class="chart-box" id="cht-thermo-err"></div>
+      </div>
+    </div>
+
+    <div class="result-box"><strong>Result:</strong> Calibrated the given thermocouple sensor against the thermometer and plotted the calibration curves.</div>
+  </article>
+
+  <!-- ---------- CM 5 : Wheatstone ---------- -->
+  <article class="exp" id="cm-wheat">
+    <div class="exp-head">
+      <span class="kicker">Circuits &amp; Measurements · Expt No. 5</span>
+      <h2>Wheatstone's Bridge</h2>
+    </div>
+
+    <div class="card"><h3>Aim</h3>
+      <p>To use Wheatstone's bridge for measuring <strong>medium resistances</strong> such as DC voltmeters and rheostats of various ranges.</p>
+    </div>
+
+    <div class="card"><h3>Apparatus</h3>
+      <div class="pill-row"><span class="pill">Wheatstone's bridge</span><span class="pill">Voltmeter MC 0–30 V</span><span class="pill">Voltmeter MC 0–10 V</span><span class="pill">Rheostats 750 Ω / 570 Ω / 40 Ω</span></div>
+    </div>
+
+    <div class="card"><h3>Principle</h3>
+      <p>The Wheatstone bridge is the standard method for medium resistances (1 Ω – 0.1 MΩ). P and Q are known ratio arms, S a known variable (decade) resistance, X the unknown. At <strong>balance</strong> no current flows through the galvanometer and:</p>
+      <div class="formula">X = (P/Q) × S,   S = S₁×1000 + S₂×100 + S₃×10 + S₄×1</div>
+    </div>
+
+    <div class="card"><h3>Circuit Diagram</h3>
+      <div class="schematic" data-diagram="wheatstone"><div class="cap">Wheatstone bridge — decade dials ×1000, ×100, ×10, ×1 form S</div></div>
+    </div>
+
+    <div class="card"><h3>Procedure</h3>
+      <ol>
+        <li>Connect the unknown (voltmeter / rheostat) to the external terminals; select internal battery and galvanometer.</li>
+        <li>Shunt the galvanometer for low sensitivity; choose a suitable P/Q ratio and vary the four decade dials until balance.</li>
+        <li>For the final balance remove the galvanometer shunt (maximum sensitivity); note the range selector and dial readings.</li>
+        <li>Repeat with the supply current reversed (cancels thermoelectric emf) and take the mean; repeat for each unknown.</li>
+      </ol>
+    </div>
+
+    <div class="card"><h3>Interactive Observation Table</h3>
+      <div id="tbl-wheat"></div>
+      <div class="calc-grid" style="margin-top:12px">
+        <div class="calc" data-calc="wheat"><h4>Quick balance calculator</h4>
+          <label>P/Q ratio
+            <select name="pq"><option>0.001</option><option>0.01</option><option selected>0.1</option><option>1</option><option>10</option><option>100</option><option>1000</option></select>
+          </label>
+          <label>S₁ (×1000)<input name="s1" value="6" min="0" max="10"></label>
+          <label>S₂ (×100)<input name="s2" value="5" min="0" max="10"></label>
+          <label>S₃ (×10)<input name="s3" value="0" min="0" max="10"></label>
+          <label>S₄ (×1)<input name="s4" value="0" min="0" max="10"></label>
+          <div class="out"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-box"><strong>Result:</strong> Resistances of the given voltmeters (0–10 V, 0–30 V MC) and rheostats measured using Wheatstone's bridge.</div>
+  </article>
+
+  <!-- ---------- CM 6 : CT & PT ---------- -->
+  <article class="exp" id="cm-ctpt">
+    <div class="exp-head">
+      <span class="kicker">Circuits &amp; Measurements · Expt No. 6</span>
+      <h2>Extension of Range of Wattmeter using CT &amp; PT</h2>
+    </div>
+
+    <div class="card"><h3>Aim</h3>
+      <p>To extend the range of the given wattmeter using a <strong>current transformer (CT)</strong> and <strong>potential transformer (PT)</strong>.</p>
+    </div>
+
+    <div class="card"><h3>Apparatus</h3>
+      <div class="pill-row"><span class="pill">Wattmeter 250 V, 10 A upf</span><span class="pill">Wattmeter 125 V, 5 A upf</span><span class="pill">Voltmeters MI 0–500 / 0–150 V</span><span class="pill">Ammeters 0–10 / 0–5 A</span><span class="pill">Rheostat 9 Ω, 12 A</span><span class="pill">CT 50/5</span><span class="pill">PT</span></div>
+    </div>
+
+    <div class="card"><h3>Principle</h3>
+      <p>Instrument transformers extend AC instrument ranges. A <strong>CT</strong> scales the line current down into the current-coil range; a <strong>PT</strong> steps the line voltage down into the pressure-coil range. The PT secondary is insulated and grounded for operator protection. The actual power is:</p>
+      <div class="formula">Indicated power = wattmeter reading × PT ratio × CT ratio</div>
+      <div class="formula">% error = (Indicated − True) / Indicated × 100</div>
+    </div>
+
+    <div class="card"><h3>Circuit Diagram</h3>
+      <div class="schematic" data-diagram="ctpt"><div class="cap">W₁ reads true power directly; W₂ reads via CT (50/5) and PT secondaries</div></div>
+    </div>
+
+    <div class="card"><h3>Procedure</h3>
+      <ol>
+        <li>Connect as in figure; switch on the autotransformer at a very low voltage, then the supply.</li>
+        <li>Adjust load current with the rheostats; for each current record ammeter, voltmeter and both wattmeter readings.</li>
+        <li>True power = W₁; indicated = W₂ × CT ratio × PT ratio. Compute % error.</li>
+        <li>Plot the error curve (% error vs I) and IR vs TR.</li>
+      </ol>
+    </div>
+
+    <div class="card"><h3>Interactive Observation Table</h3>
+      <div id="tbl-ctpt"></div>
+      <div class="two-col">
+        <div class="chart-box" id="cht-ctpt-err"></div>
+        <div class="chart-box" id="cht-ctpt-ir"></div>
+      </div>
+    </div>
+
+    <div class="result-box"><strong>Result:</strong> Range of the given wattmeter extended using CT and PT; calibration / error curves drawn.</div>
+  </article>
+
+  <!-- ---------- CM 7 : energy meter ---------- -->
+  <article class="exp" id="cm-em">
+    <div class="exp-head">
+      <span class="kicker">Circuits &amp; Measurements · Expt No. 7</span>
+      <h2>Calibration of Single-Phase Energy Meter</h2>
+    </div>
+
+    <div class="card"><h3>Aim</h3>
+      <p>To calibrate the given single-phase energy meter by <strong>direct loading</strong> and <strong>phantom loading</strong> (at upf, 0.5 pf lag &amp; lead, 0.866 pf lag &amp; lead).</p>
+    </div>
+
+    <div class="card"><h3>Apparatus</h3>
+      <div class="pill-row"><span class="pill">Energy meter 240 V, 2.5–10 A, k = 1500 rev/kWh</span><span class="pill">Wattmeter 250 V, 5 A upf</span><span class="pill">Voltmeter MI 0–300 V</span><span class="pill">Ammeters 0–10 / 0–5 A</span><span class="pill">Rheostats 50 Ω / 9 Ω</span><span class="pill">Stop watch</span><span class="pill">1φ autotransformer</span></div>
+    </div>
+
+    <div class="card"><h3>Principle</h3>
+      <p>The energy meter is compared with a <strong>standard wattmeter + stopwatch</strong>. In <strong>direct loading</strong> the current coils of both meters carry the load current; energy is found from the time for N disc revolutions. Testing at full load wastes energy, so in <strong>phantom loading</strong> the current coils are fed from a separate low-voltage source (large current, negligible power) while the pressure coils get rated voltage from another source. Different power factors are obtained by taking the pressure-coil supply from a different phase of a 3-φ system: R-phase (upf), Y or B phase (0.5 lag/lead), R–Y or R–B line voltage (0.866 lag/lead).</p>
+      <div class="formula">Indicated energy / rev, IR = (1000×3600)/k watt-seconds     True energy TR = W × t(1 rev)</div>
+      <div class="formula">Error = IR − TR     % Error = (IR − TR)/IR × 100</div>
+    </div>
+
+    <div class="card"><h3>Circuit Diagram</h3>
+      <div class="schematic" data-diagram="energymeter"><div class="cap">Direct loading arrangement (phantom loading feeds CC and PC from separate sources)</div></div>
+    </div>
+
+    <div class="card"><h3>Procedure</h3>
+      <ol>
+        <li>Apply rated voltage via the autotransformer; adjust load current with the rheostat.</li>
+        <li>Note voltmeter, ammeter, wattmeter readings and the time for 5 disc revolutions; repeat up to rated current.</li>
+        <li>For phantom loading adjust the current-coil circuit (~1 A) with minimum resistance; repeat readings.</li>
+        <li>For 0.5 / 0.866 pf tests connect the pressure coils per the phasor diagrams (lag: Y phase, lead: B phase, etc.).</li>
+        <li>Compute TR, IR and % error; plot the error curve (I on X-axis, % error on Y-axis).</li>
+      </ol>
+    </div>
+
+    <div class="card"><h3>Interactive Observation Table</h3>
+      <div class="calc" style="max-width:360px;margin-bottom:10px">
+        <label>Energy-meter constant k (rev/kWh)<input id="em-k" type="number" value="1500"></label>
+      </div>
+      <div id="tbl-em"></div>
+      <div class="chart-box" id="cht-em-err"></div>
+    </div>
+
+    <div class="result-box"><strong>Result:</strong> Single-phase energy meter calibrated by direct and phantom loading (upf, 0.5 pf lag &amp; lead, 0.866 pf lag &amp; lead).</div>
+  </article>
+
+  <!-- ---------- CM 8 : strain gauge ---------- -->
+  <article class="exp" id="cm-strain">
+    <div class="exp-head">
+      <span class="kicker">Circuits &amp; Measurements · Expt No. 8</span>
+      <h2>Calibration of Strain Gauge using Known Weights</h2>
+    </div>
+
+    <div class="card"><h3>Aim</h3>
+      <p>To calibrate the given strain gauge using known weights and plot the calibration curves.</p>
+    </div>
+
+    <div class="card"><h3>Apparatus</h3>
+      <div class="pill-row"><span class="pill">Strain-gauge trainer (cantilever beam)</span><span class="pill">Known weights (100 g steps)</span></div>
+    </div>
+
+    <div class="card"><h3>Principle</h3>
+      <p>The electrical-resistance strain gauge is the most widely used strain sensor: the <strong>resistance of a conductor changes when it is mechanically deformed</strong>. The gauge is bonded to the specimen; an applied load deforms both specimen and gauge element, and the resistance change (read through a bridge + amplifier) indicates strain. For the cantilever beam:</p>
+      <div class="formula">S = 6·P·L / (B·T²·E) — P load (kg), L = 22 cm, B = 2.81 cm, T = 0.25 cm, E = 2×10⁶ → 1 kg ≈ 377 microstrain</div>
+      <div class="schematic" data-diagram="cantilever"><div class="cap">Cantilever beam set-up with bonded strain gauge and dead-weight pan</div></div>
+    </div>
+
+    <div class="card"><h3>Procedure</h3>
+      <ol>
+        <li>Check connections; switch on and warm up for 10 minutes.</li>
+        <li>Adjust <strong>ZERO</strong> until the display reads 000.</li>
+        <li>Apply 1 kg and adjust <strong>CAL</strong> until the display reads 377 microstrain; remove the weight (display returns to zero) and repeat — the instrument is now calibrated.</li>
+        <li>Load in 100 g steps up to 1 kg; note the indicated microstrain each time.</li>
+        <li>Compare with theoretical values; compute error and % error, and plot load vs strain.</li>
+      </ol>
+    </div>
+
+    <div class="card"><h3>Interactive Observation Table</h3>
+      <div class="calc" style="margin-bottom:10px">
+        <h4>Beam constants</h4>
+        <label>B — width (cm)<input id="sg-b" type="number" value="2.81" step="any"></label>
+        <label>L — effective length (cm)<input id="sg-l" type="number" value="22" step="any"></label>
+        <label>T — thickness (cm)<input id="sg-t" type="number" value="0.25" step="any"></label>
+        <label>E — Young's modulus<input id="sg-e" type="number" value="2000000" step="any"></label>
+      </div>
+      <div id="tbl-strain"></div>
+      <div class="chart-box" id="cht-strain"></div>
+    </div>
+
+    <div class="result-box"><strong>Result:</strong> Given strain gauge calibrated using known weights; calibration curves drawn.</div>
+  </article>
+
+  <!-- ---------- CM 9 : LVDT ---------- -->
+  <article class="exp" id="cm-lvdt">
+    <div class="exp-head">
+      <span class="kicker">Circuits &amp; Measurements · Expt No. 9</span>
+      <h2>Measurement of Displacement using LVDT</h2>
+    </div>
+
+    <div class="card"><h3>Aim</h3>
+      <p>To calibrate the given LVDT using a micrometer and plot: (1) actual vs indicated measurement, (2) indicated measurement vs % error, (3) output voltage vs core position.</p>
+    </div>
+
+    <div class="card"><h3>Apparatus</h3>
+      <div class="pill-row"><span class="pill">LVDT (±10 mm) with calibration jig</span><span class="pill">Micrometer</span></div>
+    </div>
+
+    <div class="card"><h3>Principle</h3>
+      <p>The <strong>Linear Variable Differential Transformer</strong> has three coils on a tube — a centre primary and two outer secondaries wired in series opposition — with a movable ferromagnetic core. AC excitation (1–10 kHz) on the primary induces voltages in the secondaries proportional to their mutual inductance with the primary. With the core centred the two induced voltages are equal and opposite → <strong>output zero (null)</strong>. Displacing the core raises one secondary voltage and lowers the other, so the output magnitude is <strong>linear</strong> with displacement and its phase gives the direction. The frictionless, contactless core makes the LVDT highly reliable — widely used in machine tools, robots and control systems.</p>
+      <div class="schematic" data-diagram="lvdt"><div class="cap">LVDT construction — primary, two secondaries in series opposition, movable core</div></div>
+    </div>
+
+    <div class="card"><h3>Procedure</h3>
+      <ol>
+        <li>Mount the LVDT on the jig with the micrometer at 20.00 mm; align the LVDT core with the micrometer core.</li>
+        <li>Power on (230 V, 50 Hz) and warm up 10 minutes.</li>
+        <li>Rotate the micrometer to zero; adjust <strong>CAL</strong> so the display reads 10.00 mm.</li>
+        <li>Move to 10 mm and adjust <strong>ZERO</strong>; move to 20 mm and re-adjust CAL to 10.00 — the instrument is now calibrated for ±10 mm.</li>
+        <li>Move the core in 1–2 mm steps; tabulate micrometer (actual) vs display (indicated) and the output voltage; plot the graphs.</li>
+      </ol>
+    </div>
+
+    <div class="card"><h3>Interactive Observation Table</h3>
+      <p>Displacements measured from the null (centre) position — negative = one side, positive = other side.</p>
+      <div id="tbl-lvdt"></div>
+      <div class="two-col">
+        <div class="chart-box" id="cht-lvdt-cal"></div>
+        <div class="chart-box" id="cht-lvdt-v"></div>
+      </div>
+    </div>
+
+    <div class="result-box"><strong>Result:</strong> LVDT calibrated against the micrometer; plotted actual vs indicated, indicated vs % error, and output voltage vs core position (V-curve about the null).</div>
+  </article>
+
+  </main>
+</div>
+
+<footer class="site">
+  LayrdEDU · Interactive lab manuals for engineering students — Analog Electronics &amp; Circuits and Measurements.<br>
+  Enter your own readings in any table; every calculation and graph follows the manual's formulas.
+</footer>
+
+<script src="charts.js"></script>
+<script src="schematics.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
