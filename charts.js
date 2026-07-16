@@ -52,10 +52,11 @@
     const H = cfg.height ? (small ? Math.round(cfg.height * 0.85) : cfg.height) : (small ? 260 : 340);
     const P = { l: small ? 46 : 58, r: small ? 12 : 18, t: 14, b: small ? 40 : 46 };
 
-    const series = (cfg.series || []).map(s => ({
-      ...s,
-      pts: (s.pts || []).filter(p => isFinite(p[0]) && isFinite(p[1])).sort((a, b) => a[0] - b[0]),
-    })).filter(s => s.pts.length);
+    const series = (cfg.series || []).map(s => {
+      const pts = (s.pts || []).filter(p => isFinite(p[0]) && isFinite(p[1]));
+      // parametric curves (e.g. Lissajous) must keep point order — pass sort:false
+      return { ...s, pts: s.sort === false ? pts : pts.sort((a, b) => a[0] - b[0]) };
+    }).filter(s => s.pts.length);
 
     // legend (only when ≥ 2 series; single series is named by the panel title)
     if (series.length >= 2) {

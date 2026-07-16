@@ -125,6 +125,8 @@
           <div class="out"></div>
         </div>
       </div>
+      <p class="note">The Lissajous pattern below redraws from the Y₁ / Y₂ values above — the ellipse you would see on the CRO screen in X-Y mode.</p>
+      <div class="chart-box" id="cht-lissajous"></div>
     </div>
 
     <div class="result-box"><strong>Result:</strong> Familiarized with the CRO and its controls; measured amplitude, frequency and phase difference of signals.</div>
@@ -292,7 +294,16 @@
         <label>Include 0.6 V diode drop <input type="checkbox" id="clip-drop" checked style="width:auto"></label>
       </div>
       <p class="note" id="clip-desc"></p>
-      <div class="chart-box" id="cht-clipper"></div>
+      <div class="two-col">
+        <div>
+          <h4 style="margin:6px 0">Output waveform</h4>
+          <div class="chart-box" id="cht-clipper"></div>
+        </div>
+        <div>
+          <h4 style="margin:6px 0">Transfer characteristic (CRO X-Y mode)</h4>
+          <div class="chart-box" id="cht-clip-tc"></div>
+        </div>
+      </div>
     </div>
 
     <div class="result-box"><strong>Result:</strong> Various clipping and clamping circuits were set up; their output waveforms and transfer characteristics were observed.</div>
@@ -486,6 +497,22 @@
       <p class="note">Manual design: inverting — R<sub>i</sub> = 1 k, R<sub>f</sub> = 10 k (A = −10); non-inverting — A = 11; follower — R<sub>f</sub> = 0 (A = 1); integrator — C = 0.01 µF, R = 15 k, R<sub>f</sub> = 150 k (break f = 100 Hz); differentiator — T = 2πR<sub>f</sub>C = 1 ms.</p>
     </div>
 
+    <div class="card"><h3>Interactive — Input / Output Waveforms</h3>
+      <div class="calc" style="max-width:420px">
+        <label>Circuit
+          <select id="oa-kind" style="width:230px">
+            <option value="inv">Inverting amplifier (A = −10)</option>
+            <option value="noninv">Non-inverting amplifier (A = 11)</option>
+            <option value="follower">Voltage follower (A = 1)</option>
+            <option value="adder">Adder (V₂ = 0.5 V DC)</option>
+            <option value="integ">Integrator (square → triangle)</option>
+            <option value="diff">Differentiator (square → spikes)</option>
+          </select>
+        </label>
+      </div>
+      <div class="chart-box" id="cht-opamp"></div>
+    </div>
+
     <div class="result-box"><strong>Result:</strong> Designed and set up the inverting amplifier, non-inverting amplifier, voltage follower, adder, integrator and differentiator, and verified their outputs.</div>
   </article>
 
@@ -546,6 +573,15 @@
           <div class="out"></div>
         </div>
       </div>
+      <div class="calc" style="max-width:360px;margin-top:12px">
+        <label>Show output of
+          <select id="osc-kind" style="width:200px">
+            <option value="ps">Phase-shift oscillator</option>
+            <option value="wien">Wien bridge oscillator</option>
+          </select>
+        </label>
+      </div>
+      <div class="chart-box" id="cht-osc"></div>
     </div>
 
     <div class="result-box"><strong>Result:</strong> Phase-shift oscillator — amplitude 11 V, T = 1.1 ms, f = 909.09 Hz. Wien bridge — amplitude 11 V (constant when gain varied), T = 1 ms, f = 1 kHz.</div>
@@ -599,6 +635,13 @@
           <div class="out"></div>
         </div>
       </div>
+      <div class="calc" style="margin-top:12px">
+        <label style="gap:14px">Pot position (rise time)
+          <input id="wg-duty" type="range" min="10" max="90" value="50" style="width:220px;text-align:left">
+        </label>
+        <p class="note" style="margin:8px 0 0" id="wg-duty-lbl"></p>
+      </div>
+      <div class="chart-box" id="cht-wavegen"></div>
     </div>
 
     <div class="result-box"><strong>Result:</strong> Triangular wave generator set up — time period 0.7 ms, V<sub>sat</sub> = 11 V, V<sub>out</sub> = 4 V. Saw-tooth output obtained on the CRO.</div>
@@ -630,7 +673,7 @@
     <div class="card"><h3>Design</h3>
       <div class="formula">UTP = +V_sat·R₂/(R₁+R₂) + V_ref·R₁/(R₁+R₂) = 3 V</div>
       <div class="formula">LTP = −V_sat·R₂/(R₁+R₂) + V_ref·R₁/(R₁+R₂) = 2 V</div>
-      <div class="formula">With V_sat = 13 V → R₂ = 1 kΩ, R₁ = 2.5 kΩ, V_ref = 2.5 V</div>
+      <div class="formula">With V_sat = 13 V → R₂ = 1 kΩ, R₁ = 22 kΩ (as in the circuit diagram), V_ref = 2.5 V → UTP ≈ 2.96 V, LTP ≈ 1.83 V</div>
     </div>
 
     <div class="card"><h3>Procedure</h3>
@@ -644,13 +687,15 @@
     <div class="card"><h3>Interactive — Thresholds &amp; Observation</h3>
       <div class="calc-grid">
         <div class="calc" data-calc="schmitt"><h4>Threshold calculator</h4>
-          <label>R₁ (kΩ)<input name="r1" value="2.5" step="any"></label>
+          <label>R₁ (kΩ)<input name="r1" value="22" step="any"></label>
           <label>R₂ (kΩ)<input name="r2" value="1" step="any"></label>
           <label>V<sub>sat</sub> (V)<input name="vsat" value="13" step="any"></label>
           <label>V<sub>ref</sub> (V)<input name="vref" value="2.5" step="any"></label>
           <div class="out"></div>
         </div>
       </div>
+      <p class="note">Waveforms below follow the calculator values — the output switches at the UTP and LTP marked on the graph.</p>
+      <div class="chart-box" id="cht-schmitt"></div>
       <div id="tbl-schmitt"></div>
     </div>
 
@@ -703,6 +748,8 @@
           <div class="out"></div>
         </div>
       </div>
+      <p class="note">Waveforms at pin 3 (output) and pin 6 (capacitor) for the component values above — the capacitor swings exponentially between ⅓ V<sub>CC</sub> and ⅔ V<sub>CC</sub>.</p>
+      <div class="chart-box" id="cht-astable"></div>
       <div id="tbl-astable"></div>
     </div>
 
@@ -752,6 +799,8 @@
           <div class="out"></div>
         </div>
       </div>
+      <p class="note">Trigger, output pulse and capacitor voltage for the R, C above. Note the second trigger arriving during t<sub>p</sub> has <strong>no effect</strong> on the output — exactly as in the manual's expected waveforms.</p>
+      <div class="chart-box" id="cht-mono"></div>
     </div>
 
     <div class="result-box"><strong>Result:</strong> Designed a monostable multivibrator using IC 555 and obtained its waveforms; practical pulse width matched t<sub>p</sub> = 1.1RC.</div>
@@ -1120,6 +1169,10 @@
       </div>
       <div id="tbl-strain"></div>
       <div class="chart-box" id="cht-strain"></div>
+      <div class="two-col">
+        <div class="chart-box" id="cht-strain-cal"></div>
+        <div class="chart-box" id="cht-strain-err"></div>
+      </div>
     </div>
 
     <div class="result-box"><strong>Result:</strong> Given strain gauge calibrated using known weights; calibration curves drawn.</div>
@@ -1162,6 +1215,7 @@
         <div class="chart-box" id="cht-lvdt-cal"></div>
         <div class="chart-box" id="cht-lvdt-v"></div>
       </div>
+      <div class="chart-box" id="cht-lvdt-err"></div>
     </div>
 
     <div class="result-box"><strong>Result:</strong> LVDT calibrated against the micrometer; plotted actual vs indicated, indicated vs % error, and output voltage vs core position (V-curve about the null).</div>

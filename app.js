@@ -271,6 +271,29 @@
 
   // ---- Expt 4: clipping / clamping simulator ----
   const SIMS = {};
+  // memory-less input→output mapping shared by the waveform and transfer-characteristic plots
+  function clipMap(kind, drop, v, A) {
+    let o = v;
+    const clipHi = lim => { if (o > lim) o = lim; };
+    const clipLo = lim => { if (o < lim) o = lim; };
+    switch (kind) {
+      case "pos0": clipHi(drop); break;
+      case "neg0": clipLo(-drop); break;
+      case "pos3": clipHi(3 + drop); break;
+      case "posm3": clipHi(-3 + drop); break;
+      case "neg3": clipLo(3 - drop); break;
+      case "double3": clipHi(3 + drop); clipLo(-3 - drop); break;
+      case "slicer35": clipHi(5 + drop); clipLo(3 - drop); break;
+      case "slicerm": clipHi(-3 + drop); clipLo(-5 - drop); break;
+      // clampers: shift the whole wave by a DC level set by the charged capacitor
+      case "clampPos0": o = v + A - drop; break;
+      case "clampNeg0": o = v - A + drop; break;
+      case "clampPos3": o = v + A + 3 - drop; break;
+      case "clampPosM3": o = v + A - 3 - drop; break;
+      case "clampNeg3": o = v - A + 3 + drop; break;
+    }
+    return o;
+  }
   function clipperSim() {
     const el = $("#cht-clipper"); if (!el) return;
     const kind = $("#clip-kind").value, drop = $("#clip-drop").checked ? 0.6 : 0;
@@ -279,26 +302,7 @@
     for (let i = 0; i <= 240; i++) {
       const t = i / 120; // two cycles
       const v = A * Math.sin(2 * Math.PI * t);
-      let o = v;
-      const clipHi = lim => { if (o > lim) o = lim; };
-      const clipLo = lim => { if (o < lim) o = lim; };
-      switch (kind) {
-        case "pos0": clipHi(drop); break;
-        case "neg0": clipLo(-drop); break;
-        case "pos3": clipHi(3 + drop); break;
-        case "posm3": clipHi(-3 + drop); break;
-        case "neg3": clipLo(3 - drop); break;
-        case "double3": clipHi(3 + drop); clipLo(-3 - drop); break;
-        case "slicer35": clipHi(5 + drop); clipLo(3 - drop); break;
-        case "slicerm": clipHi(-3 + drop); clipLo(-5 - drop); break;
-        // clampers: shift the whole wave
-        case "clampPos0": o = v + A - drop; break;
-        case "clampNeg0": o = v - A + drop; break;
-        case "clampPos3": o = v + A + 3 - drop; break;
-        case "clampPosM3": o = v + A - 3 - drop; break;
-        case "clampNeg3": o = v - A + 3 + drop; break;
-      }
-      inPts.push([t, v]); outPts.push([t, o]);
+      inPts.push([t, v]); outPts.push([t, clipMap(kind, drop, v, A)]);
     }
     LCharts.lineChart(el, {
       xLabel: "time (cycles)", yLabel: "voltage (V)", height: 320, zeroY: false,
@@ -307,6 +311,19 @@
         { name: "Vo", color: C2(), pts: outPts, markers: false },
       ],
     });
+    // transfer characteristic Vo vs Vin (as observed in CRO X-Y mode)
+    const tc = $("#cht-clip-tc");
+    if (tc) {
+      const tPts = [], idPts = [];
+      for (let v = -A; v <= A + 1e-9; v += 0.25) { tPts.push([v, clipMap(kind, drop, v, A)]); idPts.push([v, v]); }
+      LCharts.lineChart(tc, {
+        xLabel: "Vin (V)", yLabel: "Vo (V)", height: 320, zeroY: false,
+        series: [
+          { name: "Vo = Vin (reference)", color: C1(), pts: idPts, markers: false, dashed: true },
+          { name: "Transfer characteristic", color: C2(), pts: tPts, markers: false },
+        ],
+      });
+    }
     const desc = {
       pos0: "Positive clipper, 0 V — positive half-cycles removed; clipping at +0.6 V with diode drop.",
       neg0: "Negative clipper, 0 V — negative half-cycles removed; clipping at −0.6 V with diode drop.",
@@ -545,6 +562,215 @@
     const ph = Math.asin(s) * 180 / Math.PI;
     return `sin φ = Y₁/Y₂ = ${f(s, 3)}\nPhase difference φ = <b>${f(ph, 2)}°</b>`;
   };
+
+  /* ============ waveform simulations (graphs from the experiment objectives) ============ */
+  const calcInput = (calc, name) => { const e = $(`.calc[data-calc="${calc}"] [name="${name}"]`); return e ? +e.value : NaN; };
+  const bindSim = (sel, fn) => { const e = $(sel); if (e) e.addEventListener("input", fn); };
+
+  // Expt 1 — Lissajous pattern (X = Vin, Y = Vo shifted by φ)
+  function lissajousSim() {
+    const el = $("#cht-lissajous"); if (!el) return;
+    const y1 = calcInput("croPhase", "y1"), y2 = calcInput("croPhase", "y2");
+    const s = y1 / y2, ok = s >= -1 && s <= 1;
+    const phi = ok ? Math.asin(s) : Math.PI / 4;
+    const pts = [];
+    for (let i = 0; i <= 200; i++) {
+      const t = i / 200 * 2 * Math.PI;
+      pts.push([Math.sin(t), (ok ? y2 : 1) * Math.sin(t + phi)]);
+    }
+    LCharts.lineChart(el, {
+      xLabel: "Vin → X plates", yLabel: "Vo → Y plates", height: 300, zeroY: false,
+      series: [{ name: "Lissajous", color: C1(), pts, markers: false, sort: false }],
+    });
+  }
+  SIMS.lissajous = lissajousSim;
+  bindSim('.calc[data-calc="croPhase"]', lissajousSim);
+
+  // Expt 6 — op-amp input/output waveforms
+  function opampSim() {
+    const el = $("#cht-opamp"); if (!el) return;
+    const kind = $("#oa-kind").value;
+    const N = 400, T = 1, dt = 2 * T / N;
+    const vin = [], vout = [];
+    let integ = 0;
+    for (let i = 0; i <= N; i++) {
+      const t = i * dt;
+      const sine = Math.sin(2 * Math.PI * t / T);
+      const square = (t % T) < T / 2 ? 1 : -1;
+      let vi, vo;
+      switch (kind) {
+        case "inv": vi = sine; vo = Math.max(-13, Math.min(13, -10 * sine)); break;
+        case "noninv": vi = sine; vo = Math.max(-13, Math.min(13, 11 * sine)); break;
+        case "follower": vi = sine; vo = sine; break;
+        case "adder": vi = sine; vo = -(sine + 0.5); break; // V2 = 0.5 V DC, unity gains
+        case "integ": {
+          vi = square;
+          integ += -square * dt / 0.30; // 1/(RC) scaled for display: triangle ≈ ±1.65 V
+          vo = integ; break;
+        }
+        case "diff": {
+          vi = square;
+          const tin = t % (T / 2), edge = (Math.floor(2 * t / T) % 2 === 0) ? -1 : 1;
+          vo = 2.5 * edge * Math.exp(-tin / (0.06 * T)); break;
+        }
+      }
+      vin.push([t, vi]); vout.push([t, vo]);
+    }
+    // centre the integrator triangle about 0
+    if (kind === "integ") {
+      const m = (Math.max(...vout.map(p => p[1])) + Math.min(...vout.map(p => p[1]))) / 2;
+      vout.forEach(p => p[1] -= m);
+    }
+    LCharts.lineChart(el, {
+      xLabel: "time (ms)", yLabel: "voltage (V)", height: 320, zeroY: false,
+      series: [
+        { name: "Vin", color: C1(), pts: vin, markers: false, dashed: true },
+        { name: "Vo", color: C2(), pts: vout, markers: false },
+      ],
+    });
+  }
+  SIMS.opamp = opampSim;
+  bindSim("#oa-kind", opampSim);
+
+  // Expt 7 — oscillator output waveform at the designed frequency
+  function oscSim() {
+    const el = $("#cht-osc"); if (!el) return;
+    const kind = $("#osc-kind").value;
+    let f0, amp = 11;
+    if (kind === "ps") f0 = 1 / (2 * Math.PI * Math.sqrt(6) * calcInput("psosc", "r") * 1e3 * calcInput("psosc", "c") * 1e-6);
+    else f0 = 1 / (2 * Math.PI * calcInput("wien", "r") * 1e3 * calcInput("wien", "c") * 1e-6);
+    if (!Number.isFinite(f0) || f0 <= 0) { el.innerHTML = ""; return; }
+    const Tms = 1000 / f0, pts = [];
+    for (let i = 0; i <= 300; i++) { const t = i / 300 * 2 * Tms; pts.push([t, amp * Math.sin(2 * Math.PI * t / Tms)]); }
+    LCharts.lineChart(el, {
+      xLabel: "time (ms)", yLabel: "Vo (V)", height: 300, zeroY: false,
+      series: [{ name: `Output sine — f₀ = ${eng(f0)}`, color: C1(), pts, markers: false }],
+    });
+  }
+  SIMS.osc = oscSim;
+  bindSim("#osc-kind", oscSim);
+  bindSim('.calc[data-calc="psosc"]', oscSim);
+  bindSim('.calc[data-calc="wien"]', oscSim);
+
+  // Expt 8 — triangular / saw-tooth generator waveforms (square at A1, ramp at A2)
+  function waveGenSim() {
+    const el = $("#cht-wavegen"); if (!el) return;
+    const r1 = calcInput("trigen", "r1") * 1e3, r2 = calcInput("trigen", "r2"),
+      r3 = calcInput("trigen", "r3") * 1e3, c = calcInput("trigen", "c") * 1e-6,
+      vsat = calcInput("trigen", "vsat");
+    const d = (+$("#wg-duty").value) / 100; // rise fraction (pot position)
+    const fr = r1 / (4 * r2 * r3 * c);
+    if (!Number.isFinite(fr) || fr <= 0) { el.innerHTML = ""; return; }
+    const Tms = 1000 / fr, vp = (r2 / r1) * vsat; // ±Vp triangle
+    const tri = [], sq = [];
+    for (let i = 0; i <= 400; i++) {
+      const t = i / 400 * 2 * Tms, ph = (t / Tms) % 1;
+      const rising = ph < d;
+      const v = rising ? -vp + 2 * vp * (ph / d) : vp - 2 * vp * ((ph - d) / (1 - d));
+      tri.push([t, v]); sq.push([t, rising ? vsat : -vsat]);
+    }
+    LCharts.lineChart(el, {
+      xLabel: "time (ms)", yLabel: "voltage (V)", height: 320, zeroY: false,
+      series: [
+        { name: "A₁ output (square)", color: C1(), pts: sq, markers: false, dashed: true },
+        { name: "A₂ output (triangular / saw-tooth)", color: C2(), pts: tri, markers: false },
+      ],
+    });
+    const lbl = $("#wg-duty-lbl");
+    if (lbl) lbl.textContent = `${$("#wg-duty").value} % rise (50 % = triangular; other values = saw-tooth)`;
+  }
+  SIMS.wavegen = waveGenSim;
+  bindSim("#wg-duty", waveGenSim);
+  bindSim('.calc[data-calc="trigen"]', waveGenSim);
+
+  // Expt 9 — Schmitt trigger waveforms with UTP / LTP
+  function schmittSim() {
+    const el = $("#cht-schmitt"); if (!el) return;
+    const r1 = calcInput("schmitt", "r1"), r2 = calcInput("schmitt", "r2"),
+      vsat = calcInput("schmitt", "vsat"), vref = calcInput("schmitt", "vref");
+    const k2 = r2 / (r1 + r2), k1 = r1 / (r1 + r2);
+    const utp = vsat * k2 + vref * k1, ltp = -vsat * k2 + vref * k1;
+    if (![utp, ltp, vsat].every(Number.isFinite)) { el.innerHTML = ""; return; }
+    const A = Math.max(Math.abs(utp), Math.abs(ltp)) * 1.7 + 1;
+    const vin = [], vout = [];
+    let state = 1; // +Vsat
+    for (let i = 0; i <= 400; i++) {
+      const t = i / 200; // two cycles
+      const v = A * Math.sin(2 * Math.PI * t);
+      // inverting Schmitt (Vin at the − input): above UTP → −Vsat, below LTP → +Vsat
+      if (state === 1 && v > utp) state = -1;
+      else if (state === -1 && v < ltp) state = 1;
+      vin.push([t, v]); vout.push([t, state * vsat]);
+    }
+    LCharts.lineChart(el, {
+      xLabel: "time (cycles)", yLabel: "voltage (V)", height: 320, zeroY: false,
+      series: [
+        { name: "Vin (sine)", color: C1(), pts: vin, markers: false, dashed: true },
+        { name: "Vo (square)", color: C2(), pts: vout, markers: false },
+      ],
+      refY: [{ y: utp, label: "UTP = " + f(utp, 2) + " V" }, { y: ltp, label: "LTP = " + f(ltp, 2) + " V" }],
+    });
+  }
+  SIMS.schmitt = schmittSim;
+  bindSim('.calc[data-calc="schmitt"]', schmittSim);
+
+  // Expt 10 — 555 astable: capacitor exponential between ⅓ and ⅔ V_CC + square output
+  function astableSim() {
+    const el = $("#cht-astable"); if (!el) return;
+    const ra = calcInput("astable", "ra") * 1e3, rb = calcInput("astable", "rb") * 1e3,
+      c = calcInput("astable", "c") * 1e-6, vcc = calcInput("astable", "vcc");
+    const tc = 0.69 * (ra + rb) * c * 1000, td = 0.69 * rb * c * 1000; // ms
+    if (![tc, td, vcc].every(v => Number.isFinite(v) && v > 0)) { el.innerHTML = ""; return; }
+    const tauC = (ra + rb) * c * 1000, tauD = rb * c * 1000, T = tc + td;
+    const cap = [], out = [];
+    for (let i = 0; i <= 600; i++) {
+      const t = i / 600 * 3 * T, ph = t % T;
+      let vc;
+      if (ph < tc) vc = vcc + (vcc / 3 - vcc) * Math.exp(-ph / tauC);        // charging toward Vcc
+      else vc = (2 * vcc / 3) * Math.exp(-(ph - tc) / tauD);                  // discharging toward 0
+      cap.push([t, vc]); out.push([t, ph < tc ? vcc : 0]);
+    }
+    LCharts.lineChart(el, {
+      xLabel: "time (ms)", yLabel: "voltage (V)", height: 320,
+      series: [
+        { name: "Output — pin 3", color: C1(), pts: out, markers: false, dashed: true },
+        { name: "Capacitor — pin 6", color: C2(), pts: cap, markers: false },
+      ],
+      refY: [{ y: 2 * vcc / 3, label: "⅔ V_CC" }, { y: vcc / 3, label: "⅓ V_CC" }],
+    });
+  }
+  SIMS.astable = astableSim;
+  bindSim('.calc[data-calc="astable"]', astableSim);
+
+  // Expt 11 — 555 monostable: trigger, capacitor charge and output pulse t_p = 1.1RC
+  function monoSim() {
+    const el = $("#cht-mono"); if (!el) return;
+    const r = calcInput("mono", "r") * 1e3, c = calcInput("mono", "c") * 1e-6;
+    const rc = r * c * 1000, tp = 1.1 * rc; // ms
+    if (!Number.isFinite(tp) || tp <= 0) { el.innerHTML = ""; return; }
+    const vcc = 10, t0 = 0.15 * tp, span = 2.4 * tp;
+    const trig = [], cap = [], out = [];
+    for (let i = 0; i <= 600; i++) {
+      const t = i / 600 * span;
+      // trigger: narrow negative pulses; the second one (during t_p) has no effect
+      const nearT = (a) => t >= a && t < a + 0.04 * tp;
+      trig.push([t, (nearT(t0) || nearT(t0 + 0.55 * tp)) ? 0 : vcc / 2]);
+      const inPulse = t >= t0 && t < t0 + tp;
+      out.push([t, inPulse ? vcc : 0]);
+      cap.push([t, inPulse ? vcc * (1 - Math.exp(-(t - t0) / rc)) : 0]);
+    }
+    LCharts.lineChart(el, {
+      xLabel: "time (ms)", yLabel: "voltage (V)", height: 320,
+      series: [
+        { name: "Trigger — pin 2", color: C3(), pts: trig, markers: false, dashed: true },
+        { name: "Output — pin 3", color: C1(), pts: out, markers: false },
+        { name: "Capacitor voltage", color: C2(), pts: cap, markers: false },
+      ],
+      refY: [{ y: 2 * vcc / 3, label: "⅔ V_CC" }],
+    });
+  }
+  SIMS.mono = monoSim;
+  bindSim('.calc[data-calc="mono"]', monoSim);
 
   /* =========================================================
      CIRCUITS & MEASUREMENTS LAB
@@ -836,6 +1062,24 @@
           { name: "Actual (theory)", color: C2(), dashed: true, pts: rows.filter(r => Number.isFinite(r.wt)).map(r => [r.wt, strainActual(r.wt)]) },
         ],
       }),
+    }, {
+      el: "cht-strain-cal",
+      build: rows => ({
+        xLabel: "Actual reading (µstrain)", yLabel: "Indicated reading (µstrain)",
+        series: [
+          { name: "Calibration", color: C1(), pts: rows.filter(r => Number.isFinite(r.wt) && Number.isFinite(r.ir)).map(r => [strainActual(r.wt), r.ir]) },
+          { name: "Ideal (IR = AR)", color: C2(), dashed: true, markers: false, pts: rows.filter(r => Number.isFinite(r.wt)).map(r => [strainActual(r.wt), strainActual(r.wt)]) },
+        ],
+      }),
+    }, {
+      el: "cht-strain-err",
+      build: rows => ({
+        xLabel: "Indicated reading (µstrain)", yLabel: "% Error (of full scale)", zeroY: true,
+        series: [{
+          name: "% error", color: C3(),
+          pts: rows.filter(r => Number.isFinite(r.wt) && Number.isFinite(r.ir)).map(r => [r.ir, 100 * (r.ir - strainActual(r.wt)) / strainActual(1000)]),
+        }],
+      }),
     }],
   });
   ["sg-b", "sg-l", "sg-t", "sg-e"].forEach(id => { const e = $("#" + id); if (e) e.addEventListener("input", () => TABLES["tbl-strain"]._render()); });
@@ -874,13 +1118,23 @@
           series: [{ name: "|V_out|", color: C3(), pts: rows.filter(r => Number.isFinite(r.ar) && Number.isFinite(r.vo)).map(r => [r.ar, Math.abs(r.vo)]) }],
         }),
       },
+      {
+        el: "cht-lvdt-err",
+        build: rows => ({
+          xLabel: "Indicated measurement (mm)", yLabel: "% Error", zeroY: true,
+          series: [{
+            name: "% error", color: C3(),
+            pts: rows.filter(r => Number.isFinite(r.ar) && Number.isFinite(r.ir) && r.ir !== 0).map(r => [r.ir, 100 * (r.ir - r.ar) / r.ir]),
+          }],
+        }),
+      },
     ],
   });
 
   /* ================= boot ================= */
   Schematics.render(document);
   bindCalcs();
-  clipperSim();
+  Object.values(SIMS).forEach(fn => { try { fn(); } catch (_) { } });
   applyTheme(localStorage.getItem("layrd-theme") || "");
   // deep-link support: layrdedu.github.io/#cm-lvdt etc.
   const hash = location.hash.slice(1);
