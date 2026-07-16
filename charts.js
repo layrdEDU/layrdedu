@@ -99,6 +99,15 @@
 
     // grid + ticks (fewer x ticks on narrow screens)
     const xt = niceTicks(xmin, xmax, small ? 4 : 7), yt = niceTicks(ymin, ymax, small ? 5 : 6);
+
+    // scale annotation (as written on the manual's graph sheets): 1 division = one grid step
+    const unitOf = lbl => { const m = /\(([^)]*)\)/.exec(lbl || ""); return m ? m[1] : (lbl || ""); };
+    if (xt.length > 1 && yt.length > 1) {
+      const note = document.createElement("div");
+      note.className = "scale-note";
+      note.innerHTML = `<b>Scale</b> — x-axis: 1 div = ${fmtNum(xt[1] - xt[0])} ${unitOf(cfg.xLabel)} · y-axis: 1 div = ${fmtNum(yt[1] - yt[0])} ${unitOf(cfg.yLabel)}`;
+      container.insertBefore(note, svg);
+    }
     yt.forEach(v => {
       svg.appendChild(el("line", { x1: P.l, x2: W - P.r, y1: Y(v), y2: Y(v), stroke: "var(--grid)", "stroke-width": 1 }));
       const t = el("text", { x: P.l - 8, y: Y(v) + 4, "text-anchor": "end", "font-size": 11, fill: "var(--muted)", style: "font-variant-numeric:tabular-nums" });
