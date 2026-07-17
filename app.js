@@ -24,7 +24,9 @@
   });
 
   /* ================= tabs & navigation ================= */
-  const labs = ["ae", "cm"];
+  // labs = the two lab-manual tabs + all Study Hub subject tabs injected by study.js
+  const labs = ["ae", "cm"].concat(window.STUDY_LABS || []);
+  const labOf = id => { const p = (id || "").split("-")[0]; return labs.includes(p) ? p : null; };
   function showLab(lab) {
     labs.forEach(l => {
       $("#tab-" + l).classList.toggle("active", l === lab);
@@ -1136,19 +1138,19 @@
   bindCalcs();
   Object.values(SIMS).forEach(fn => { try { fn(); } catch (_) { } });
   applyTheme(localStorage.getItem("layrd-theme") || "");
-  // deep-link support: layrdedu.github.io/#cm-lvdt etc.
+  // deep-link support: layrdedu.github.io/#cm-lvdt, #cn-m2, #anx-cheat etc.
   const hash = location.hash.slice(1);
-  const target = hash && document.getElementById(hash) && hash.match(/^(ae|cm)-/) ? hash : null;
+  const target = hash && document.getElementById(hash) && labOf(hash) ? hash : null;
   if (target) {
-    const lab = target.slice(0, 2);
-    showLab(lab);
-    showExp(lab, target);
+    showLab(labOf(target));
+    showExp(labOf(target), target);
   } else {
-    showLab(localStorage.getItem("layrd-lab") || "ae");
+    const saved = localStorage.getItem("layrd-lab");
+    showLab(labs.includes(saved) ? saved : "ae");
   }
   window.addEventListener("hashchange", () => {
     const h = location.hash.slice(1);
-    if (h && document.getElementById(h) && h.match(/^(ae|cm)-/)) { showLab(h.slice(0, 2)); showExp(h.slice(0, 2), h); }
+    if (h && document.getElementById(h) && labOf(h)) { showLab(labOf(h)); showExp(labOf(h), h); }
   });
   // responsive charts: redraw at the new width when the viewport changes (rotation, resize)
   let rsz;
