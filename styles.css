@@ -302,6 +302,17 @@ td .rowdel:hover { color: var(--bad); background: var(--surface-2); }
 }
 .chart-tip b { font-weight: 700; }
 
+/* reference images hotlinked from Wikimedia Commons */
+.webimg { margin: 12px 0 6px; text-align: center; }
+.webimg img {
+  max-width: min(560px, 100%); height: auto;
+  background: #fff; /* many Commons diagrams are transparent — keep them readable in dark mode */
+  border: 1px solid var(--border); border-radius: 10px; padding: 8px; box-sizing: border-box;
+}
+.webimg figcaption { font-size: 12px; color: var(--muted); margin-top: 5px; }
+.webimg figcaption a { color: var(--accent); text-decoration: none; }
+.webimg figcaption a:hover { text-decoration: underline; }
+
 /* misc */
 .note {
   border-left: 3px solid var(--accent); background: var(--accent-soft);
