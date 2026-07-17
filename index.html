@@ -271,7 +271,7 @@
     <div class="card"><h3>Interactive Waveform Simulator</h3>
       <div class="calc" style="max-width:520px">
         <label>Circuit
-          <select id="clip-kind" style="width:270px">
+          <select id="clip-kind" class="wide">
             <optgroup label="Clippers">
               <option value="pos0">Positive clipper — 0 V</option>
               <option value="neg0">Negative clipper — 0 V</option>
@@ -500,7 +500,7 @@
     <div class="card"><h3>Interactive — Input / Output Waveforms</h3>
       <div class="calc" style="max-width:420px">
         <label>Circuit
-          <select id="oa-kind" style="width:230px">
+          <select id="oa-kind" class="wide">
             <option value="inv">Inverting amplifier (A = −10)</option>
             <option value="noninv">Non-inverting amplifier (A = 11)</option>
             <option value="follower">Voltage follower (A = 1)</option>
@@ -575,7 +575,7 @@
       </div>
       <div class="calc" style="max-width:360px;margin-top:12px">
         <label>Show output of
-          <select id="osc-kind" style="width:200px">
+          <select id="osc-kind" class="wide">
             <option value="ps">Phase-shift oscillator</option>
             <option value="wien">Wien bridge oscillator</option>
           </select>
@@ -637,7 +637,7 @@
       </div>
       <div class="calc" style="margin-top:12px">
         <label style="gap:14px">Pot position (rise time)
-          <input id="wg-duty" type="range" min="10" max="90" value="50" style="width:220px;text-align:left">
+          <input id="wg-duty" type="range" min="10" max="90" value="50" class="wide">
         </label>
         <p class="note" style="margin:8px 0 0" id="wg-duty-lbl"></p>
       </div>

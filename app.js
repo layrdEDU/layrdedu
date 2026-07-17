@@ -32,6 +32,9 @@
       $("#tab-" + l).classList.toggle("active", l === lab);
       $("#nav-" + l).style.display = l === lab ? "" : "none";
     });
+    // keep the active tab visible inside the scrollable tab bar (phones)
+    const tb = $("#tab-" + lab);
+    if (tb && tb.scrollIntoView) tb.scrollIntoView({ block: "nearest", inline: "nearest" });
     const first = $(`#nav-${lab} button`);
     if (!$$(`#nav-${lab} button.active`).length && first) first.click();
     else {
@@ -42,6 +45,8 @@
   }
   function showExp(lab, id) {
     $$(`#nav-${lab} button`).forEach(b => b.classList.toggle("active", b.dataset.exp === id));
+    const nb = $(`#nav-${lab} button.active`);
+    if (nb && nb.scrollIntoView) nb.scrollIntoView({ block: "nearest", inline: "nearest" });
     $$("article.exp").forEach(a => a.classList.toggle("active", a.id === id));
     try { history.replaceState(null, "", "#" + id); } catch (_) { }
     window.scrollTo({ top: 0, behavior: "auto" });
@@ -1159,4 +1164,12 @@
   // responsive charts: redraw at the new width when the viewport changes (rotation, resize)
   let rsz;
   window.addEventListener("resize", () => { clearTimeout(rsz); rsz = setTimeout(() => { try { redrawAll(); } catch (_) { } }, 200); });
+
+  // the sticky sidebar offsets itself below the sticky header via --header-h;
+  // measure the real height (tab bar row count varies with viewport/zoom)
+  const hdr = $("header.site");
+  const setHdrH = () => document.documentElement.style.setProperty("--header-h", hdr.offsetHeight + "px");
+  if ("ResizeObserver" in window) new ResizeObserver(setHdrH).observe(hdr);
+  else window.addEventListener("resize", setHdrH);
+  setHdrH();
 })();

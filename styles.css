@@ -73,6 +73,7 @@ body {
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: 15.5px;
   line-height: 1.6;
+  overflow-x: clip; /* stray wide widgets must never pan the whole page */
 }
 
 /* ---------- Header ---------- */
@@ -84,9 +85,9 @@ header.site {
 }
 .site-inner {
   max-width: 1240px; margin: 0 auto; padding: 10px 20px;
-  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  display: flex; align-items: center; gap: 8px 16px; flex-wrap: wrap;
 }
-.brand { display: flex; align-items: center; gap: 10px; }
+.brand { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
 .brand .logo {
   width: 36px; height: 36px; border-radius: 9px;
   background: linear-gradient(135deg, var(--accent), #4a3aa7);
@@ -96,9 +97,11 @@ header.site {
 .brand h1 { font-size: 19px; margin: 0; letter-spacing: -.2px; }
 .brand small { display: block; color: var(--muted); font-size: 11.5px; font-weight: 500; margin-top: -3px; }
 
+/* one scrollable row at every width — with 9+ tabs a wrapping bar grows the
+   sticky header unpredictably and buries the sidebar underneath it */
 .lab-tabs {
-  display: flex; gap: 5px; margin-left: auto; background: var(--surface-2); padding: 4px; border-radius: 18px;
-  flex: 1 1 300px; min-width: 0; flex-wrap: wrap; justify-content: flex-end;
+  display: flex; gap: 5px; background: var(--surface-2); padding: 4px; border-radius: 999px;
+  order: 3; width: 100%; min-width: 0; flex-wrap: nowrap; overflow-x: auto;
   scrollbar-width: none; -webkit-overflow-scrolling: touch;
 }
 .lab-tabs::-webkit-scrollbar { display: none; }
@@ -121,9 +124,9 @@ header.site {
 @media (max-width: 900px) { .wrap { grid-template-columns: 1fr; } }
 
 nav.exp-nav {
-  position: sticky; top: 76px; align-self: start;
+  position: sticky; top: calc(var(--header-h, 104px) + 12px); align-self: start;
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 10px; max-height: calc(100vh - 100px); overflow: auto;
+  padding: 10px; max-height: calc(100vh - var(--header-h, 104px) - 36px); overflow: auto;
 }
 nav.exp-nav h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin: 8px 10px; }
 nav.exp-nav button {
@@ -146,7 +149,7 @@ nav.exp-nav button.active .n { color: var(--accent); }
 
 /* ---------- Experiment article ---------- */
 main { min-width: 0; }
-article.exp { display: none; animation: fadeIn .25s ease; }
+article.exp { display: none; animation: fadeIn .25s ease; scroll-margin-top: calc(var(--header-h, 104px) + 12px); }
 article.exp.active { display: block; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
@@ -172,6 +175,8 @@ article.exp.active { display: block; }
 .card li { margin: 4px 0; }
 
 .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+/* let columns shrink below their content (tables/formulas scroll instead of overlapping) */
+.two-col > *, .calc-grid > * { min-width: 0; }
 @media (max-width: 800px) { .two-col { grid-template-columns: 1fr; } }
 
 /* formula chips */
@@ -264,12 +269,14 @@ td .rowdel:hover { color: var(--bad); background: var(--surface-2); }
   background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px;
 }
 .calc h4 { margin: 0 0 8px; font-size: 14px; }
-.calc label { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 13px; color: var(--ink-2); margin: 6px 0; }
+.calc label { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 13px; color: var(--ink-2); margin: 6px 0; flex-wrap: wrap; }
 .calc input, .calc select {
-  width: 110px; padding: 5px 8px; border: 1px solid var(--border); border-radius: 6px;
+  width: 110px; max-width: 100%; min-width: 0; padding: 5px 8px; border: 1px solid var(--border); border-radius: 6px;
   background: var(--surface); color: var(--ink); font: inherit; font-size: 13px; text-align: right;
 }
-.calc select { text-align: left; }
+.calc select { text-align: left; width: auto; max-width: 100%; }
+.calc select.wide { width: min(270px, 100%); }
+.calc input[type="range"].wide { width: min(220px, 100%); }
 .calc .out {
   margin-top: 10px; padding: 8px 10px; background: var(--surface); border-radius: 8px;
   border: 1px solid var(--border); font-family: var(--mono); font-size: 13px; line-height: 1.7; white-space: pre-line;
@@ -316,12 +323,10 @@ kbd.unit { font-family: var(--mono); font-size: 11px; color: var(--muted); }
 
   /* compact stacked header: brand + theme on row 1, full-width tab bar on row 2 */
   .site-inner { padding: 8px 12px; gap: 8px 10px; }
-  .brand { flex: 1; min-width: 0; }
   .brand .logo { width: 30px; height: 30px; border-radius: 8px; font-size: 15px; }
   .brand h1 { font-size: 16.5px; }
   .brand small { font-size: 10px; }
-  .theme-btn { width: 34px; height: 34px; border-radius: 9px; order: 2; }
-  .lab-tabs { order: 3; margin-left: 0; width: 100%; max-width: none; flex-wrap: nowrap; overflow-x: auto; border-radius: 999px; justify-content: flex-start; }
+  .theme-btn { width: 34px; height: 34px; border-radius: 9px; }
   .lab-tabs button { flex: 0 0 auto; padding: 8px 12px; font-size: 12.5px; white-space: nowrap; }
   .t-long { display: none; }
   .t-short { display: inline; }

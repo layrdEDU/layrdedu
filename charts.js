@@ -180,9 +180,13 @@
       cross.setAttribute("opacity", 0.7);
       tip.innerHTML = `${cfg.xLabel}: <b>${(cfg.xFmt || fmtNum)(anyX)}</b><br>` + lines.join("<br>");
       const rect = container.getBoundingClientRect(), srect = svg.getBoundingClientRect();
-      const px = srect.left - rect.left + (X(anyX) / W) * srect.width;
+      let px = srect.left - rect.left + (X(anyX) / W) * srect.width;
       const py = srect.top - rect.top + (P.t / H) * srect.height + 30;
-      tip.style.left = px + "px"; tip.style.top = py + "px"; tip.style.display = "block";
+      tip.style.top = py + "px"; tip.style.display = "block";
+      // keep the (translate(-50%)-centred) tooltip inside the container on narrow screens
+      const half = tip.offsetWidth / 2;
+      px = Math.max(half + 2, Math.min(rect.width - half - 2, px));
+      tip.style.left = px + "px";
     });
     function hide() { tip.style.display = "none"; cross.setAttribute("opacity", 0); hoverDots.forEach(d => d.setAttribute("opacity", 0)); }
     svg.addEventListener("mouseleave", hide);
