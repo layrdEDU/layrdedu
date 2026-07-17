@@ -97,8 +97,8 @@ header.site {
 .brand small { display: block; color: var(--muted); font-size: 11.5px; font-weight: 500; margin-top: -3px; }
 
 .lab-tabs {
-  display: flex; gap: 6px; margin-left: auto; background: var(--surface-2); padding: 4px; border-radius: 999px;
-  overflow-x: auto; flex: 1 1 200px; min-width: 0; max-width: 900px;
+  display: flex; gap: 5px; margin-left: auto; background: var(--surface-2); padding: 4px; border-radius: 18px;
+  flex: 1 1 300px; min-width: 0; flex-wrap: wrap; justify-content: flex-end;
   scrollbar-width: none; -webkit-overflow-scrolling: touch;
 }
 .lab-tabs::-webkit-scrollbar { display: none; }
@@ -190,6 +190,15 @@ article.exp.active { display: block; }
 }
 .res-link:hover { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
 .res-link span { color: var(--accent); flex-shrink: 0; }
+
+/* interactive study widgets */
+.iw { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 14px; align-items: start; margin: 12px 0 20px; }
+.iw.noc { grid-template-columns: minmax(0, 620px); }
+@media (max-width: 840px) { .iw { grid-template-columns: 1fr; } }
+.iw .calc label.stack { flex-direction: column; align-items: stretch; gap: 4px; }
+.iw .calc label.stack input { width: 100%; text-align: left; font-family: var(--mono); font-size: 12.5px; }
+.calc input[type="range"] { width: 110px; padding: 0; border: 0; background: transparent; accent-color: var(--accent); }
+.rv { font-family: var(--mono); font-size: 12px; color: var(--accent); min-width: 34px; text-align: right; font-weight: 700; }
 .pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0; }
 .pill {
   font-size: 12.5px; background: var(--surface-2); border: 1px solid var(--border);
@@ -312,7 +321,7 @@ kbd.unit { font-family: var(--mono); font-size: 11px; color: var(--muted); }
   .brand h1 { font-size: 16.5px; }
   .brand small { font-size: 10px; }
   .theme-btn { width: 34px; height: 34px; border-radius: 9px; order: 2; }
-  .lab-tabs { order: 3; margin-left: 0; width: 100%; max-width: none; }
+  .lab-tabs { order: 3; margin-left: 0; width: 100%; max-width: none; flex-wrap: nowrap; overflow-x: auto; border-radius: 999px; justify-content: flex-start; }
   .lab-tabs button { flex: 0 0 auto; padding: 8px 12px; font-size: 12.5px; white-space: nowrap; }
   .t-long { display: none; }
   .t-short { display: inline; }

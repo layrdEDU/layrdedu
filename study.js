@@ -822,16 +822,162 @@
     },
   ];
 
+  /* ---------------- module theory & explanations (keyed by article id) ---------------- */
+  const THEORY = {
+    "m3-m1": [
+      "Any periodic signal — a square wave from a 555 timer, a rectified sine, a distorted mains waveform — can be written as a sum of pure sines and cosines whose frequencies are integer multiples of the fundamental. That is the whole idea of the Fourier series: complicated periodic behaviour is just harmonics stacked on top of each other, and the coefficients a₀, aₙ, bₙ tell you exactly how much of each harmonic is present.",
+      "The coefficients come from orthogonality: over one full period, sin(mx) and cos(nx) average to zero against each other unless m = n. Multiplying f(x) by cos(nx) and integrating therefore 'filters out' the single coefficient aₙ. Symmetry is the practical shortcut — an even function contains only cosines, an odd one only sines — and half-range expansions let you represent a function defined on (0, L) by deliberately extending it as even or odd.",
+      "Convergence has one famous quirk: at a jump discontinuity the series settles at the midpoint of the jump, and near the jump the partial sums always overshoot by about 9 % (the Gibbs phenomenon) no matter how many terms you take. Parseval's identity connects the coefficients to the signal's power — which is why the series matters to electrical engineers: harmonic content IS power distribution.",
+    ],
+    "m3-m2": [
+      "A non-periodic signal — a single pulse, a switching transient — has no fundamental frequency, so instead of discrete harmonics it needs a continuous spectrum. Letting the period of a Fourier series grow to infinity turns the coefficient sums into integrals, and the result is the Fourier transform: F(s) describes how much of every frequency the signal contains.",
+      "The transform pair is symmetric — a function and its spectrum swap roles under inversion — and this symmetry produces the reciprocal-spreading rule: compressing a signal in time stretches its spectrum, and vice versa. A narrow pulse needs a wide band of frequencies; that single fact underlies bandwidth requirements in communication and the rise-time limits of amplifiers.",
+      "Sine and cosine transforms are the half-line versions used for functions defined only for x > 0, chosen by the symmetry of the extension exactly as in half-range series. The handful of standard transforms (decaying exponential, rectangular pulse, Gaussian) plus the shifting and scaling properties solve nearly every exam problem without fresh integration.",
+    ],
+    "m3-m3": [
+      "A complex function f(z) = u + iv is 'analytic' when it has a derivative that does not depend on the direction from which you approach the point — a much stronger condition than real differentiability. Forcing the derivative along the real axis to equal the derivative along the imaginary axis produces the Cauchy–Riemann equations, the workhorse test of this module.",
+      "Analyticity has a beautiful consequence: both u and v automatically satisfy Laplace's equation, so every analytic function is a ready-made pair of harmonic functions — which is why complex analysis solves electrostatics and fluid-flow problems. Given one of the pair, the Milne–Thomson method reconstructs the whole analytic function directly.",
+      "Geometrically an analytic map is conformal: it preserves the angle between intersecting curves wherever f′(z) ≠ 0, merely rotating by arg f′ and scaling by |f′|. The bilinear (Möbius) transformation is the most examined map — it sends circles and lines to circles and lines, and three chosen point-pairs pin it down completely through the cross-ratio.",
+    ],
+    "m3-m4": [
+      "Integration in the complex plane happens along curves, and the striking result is that for analytic functions the path does not matter: around any closed contour the integral is zero (Cauchy's theorem). Poke a hole in the region — a singularity — and the integral around it stops being zero but becomes something computable.",
+      "Cauchy's integral formula is the first payoff: the value of an analytic function anywhere inside a contour is fixed entirely by its values on the contour. Differentiating the formula gives every derivative the same way, which in turn generates the Taylor series. When the function has a singularity, the Taylor series generalises to the Laurent series with negative powers, valid in an annulus around the trouble spot.",
+      "The coefficient of 1/(z−a) in the Laurent series — the residue — is the only term that survives contour integration, so every closed-contour integral collapses to 2πi times the sum of enclosed residues. Classify the singularity, compute its residue with the standard limit or p/q′ formulas, and integrals that look impossible fall out in two lines.",
+    ],
+    "cn-m1": [
+      "Mesh and node analysis are the systematic engines of circuit theory: choose currents around loops or voltages at nodes, apply Kirchhoff's laws, and any linear circuit reduces to simultaneous equations. Supermeshes and supernodes are simply the bookkeeping trick for sources that sit between two loops or two nodes.",
+      "The network theorems are shortcuts that exploit linearity. Superposition says each independent source contributes independently, so you may analyse them one at a time with the others killed. Thevenin and Norton go further: an entire two-terminal network, however messy, behaves at its terminals exactly like one source plus one resistance — which is why the lab experiment on this site measures V_oc and I_sc and nothing else.",
+      "Maximum power transfer follows directly from the Thevenin picture: with the source fixed, the load receives the most power when it mirrors the source resistance, at the price of 50 % efficiency. Dependent sources change the mechanics (they must stay alive when finding R_th) but not the theorems themselves.",
+    ],
+    "cn-m2": [
+      "Inductors and capacitors store energy, and stored energy cannot change instantaneously — so inductor current and capacitor voltage are continuous across a switching instant. Everything in transient analysis grows from that one continuity rule: it fixes the initial conditions at t = 0⁺, while the DC steady state (L a short, C an open) fixes the final values.",
+      "A single storage element gives a first-order circuit whose response is always an exponential with time constant τ = L/R or RC. Since the answer is known in shape, you never solve the differential equation in practice: find the initial value, the final value, and τ, and the universal formula writes the solution for you.",
+      "Two storage elements make the circuit second-order and introduce competition between energy sloshing (ω₀) and energy dissipation (α). Their ratio decides the personality of the response: sluggish overdamped decay, the fastest non-oscillatory critical case, or underdamped ringing at ω_d — the behaviour you can sweep continuously with the R slider below.",
+    ],
+    "cn-m3": [
+      "The Laplace transform turns calculus into algebra: differentiation becomes multiplication by s, so the integro-differential equations of a switched circuit become polynomial equations. Better still, the transform absorbs initial conditions automatically — an inductor becomes sL in series with a source Li(0⁻), a capacitor 1/sC in series with v(0⁻)/s — so one s-domain circuit contains the entire problem.",
+      "Solving means ordinary circuit analysis in s, followed by partial fractions and a table look-up to return to time. The structure of the answer is visible before inverting: each pole of the s-domain expression contributes one term to the time response — real poles give exponentials, complex pairs give damped sinusoids.",
+      "That is why the transfer function H(s) and its pole–zero map summarise a network's dynamics completely, and why the initial- and final-value theorems are such good sanity checks: they read x(0⁺) and x(∞) straight off the s-domain answer without inverting anything.",
+    ],
+    "cn-m4": [
+      "When two coils share flux, current in one induces voltage in the other through the mutual inductance M; the dot convention is just a sign bookkeeping system for whether that induced voltage aids or opposes. Coupled coils in series therefore add as L₁ + L₂ ± 2M — the ± is entirely the dots' doing.",
+      "Resonance is the frequency at which an inductor's rising reactance exactly cancels a capacitor's falling one. In a series circuit the impedance collapses to plain R, current peaks, and the voltages across L and C individually soar to Q times the supply — small R means high Q, a tall narrow response, and a bandwidth f₀/Q. The interactive below lets you watch R reshape that curve.",
+      "Two-port parameters answer a practical question: how does a black box relate its input pair (V₁, I₁) to its output pair (V₂, I₂)? Z, Y, h and ABCD are four bookkeeping choices for the same information, each convenient somewhere — h for transistors, ABCD for cascaded transmission stages, where chaining is literal matrix multiplication.",
+    ],
+    "dcm-m1": [
+      "A magnetic circuit is Ohm's law with new names: MMF (NI) drives flux φ against reluctance S, and series/parallel reluctances combine like resistances. The analogy breaks only where iron saturates and where the core dissipates energy — hysteresis loss from repeatedly re-magnetising the material and eddy-current loss from voltages induced inside the core itself, tamed by laminations.",
+      "A DC generator is a rotating application of Faraday's law: conductors moving through the pole flux generate an alternating EMF that the commutator mechanically rectifies. Counting conductors, paths, poles and speed gives the EMF equation E = φZNP/60A, with the winding style (lap or wave) deciding the number of parallel paths A.",
+      "Loading the machine distorts its own field: armature current produces a cross magnetising field (armature reaction) that shifts the neutral axis and weakens the flux, treated with interpoles and compensating windings. A self-excited generator has a bootstrap problem — it builds voltage only if residual flux exists, the field aids it, and the field resistance is below the critical value.",
+    ],
+    "dcm-m2": [
+      "A motor is the same machine run backwards, and the back EMF is the concept that makes it self-regulating: as the rotor speeds up, E_b rises and throttles the armature current to exactly what the load torque demands. At standstill E_b = 0, which is why a starter must insert resistance — otherwise the armature, only fractions of an ohm, draws a destructive current.",
+      "The two working equations, T ∝ φI_a and N ∝ E_b/φ, generate every characteristic. A shunt motor's constant flux gives near-constant speed and torque linear in current; a series motor's flux grows with its own current, giving torque proportional to current squared — brutal starting torque — and a speed that skyrockets if the load is removed.",
+      "Performance is measured by chasing the losses. Swinburne's no-load test finds the constant losses cheaply; a brake test measures output directly; Hopkinson's back-to-back test loads two machines against each other so the supply provides only the losses. Efficiency peaks where the variable copper loss equals the constant losses.",
+    ],
+    "dcm-m3": [
+      "A transformer is two coils sharing an alternating flux: the same φ_m threading N turns generates 4.44·f·φ_m·N volts per winding, so voltages sit in the turns ratio and (by power balance) currents in the inverse ratio. It works only on AC — no changing flux, no induced EMF.",
+      "The practical transformer adds imperfections you can measure: winding resistance and leakage reactance (series elements) and core loss plus magnetising current (shunt elements). The open-circuit test excites the core and reveals the shunt branch; the short-circuit test drives rated current through the windings and reveals the series branch — two cheap tests, one complete equivalent circuit.",
+      "From that circuit come the two performance numbers. Regulation is the drop I(Rcosφ ± Xsinφ) the load sees — worse for lagging loads, even negative for leading ones. Efficiency trades a fixed core loss against a copper loss growing as load², peaking exactly where the two are equal; distribution transformers, loaded lightly most of the day, are therefore judged on all-day (energy) efficiency instead.",
+    ],
+    "dcm-m4": [
+      "Three-phase power needs three-phase transformation, done either by a bank of three single-phase units or one three-legged core. The winding connections (Y or Δ on each side) set the line-voltage ratio and the phase shift between primary and secondary — captured in the vector group — and decide practical matters: a Y gives a neutral and easier insulation for HV; a Δ traps triplen harmonics.",
+      "The special connections are exam favourites because they are counter-intuitive. Lose one transformer of a Δ bank and the remaining two in open-delta still supply three-phase power, but only 1/√3 (57.7 %) of the original rating. The Scott connection tricks two single-phase transformers, one tapped at 86.6 %, into converting three-phase to two-phase.",
+      "Transformers share a busbar happily only if they agree: equal voltage ratios and vector groups (else circulating currents), and equal per-unit impedances if the load is to divide in proportion to ratings. The autotransformer saves copper by making part of one winding common to both sides — most economical when the ratio is near unity, at the cost of losing isolation.",
+    ],
+    "anx-m1": [
+      "A transistor amplifies only if its DC operating point is planted in the active region, so biasing comes before any signal. The load line drawn on the output characteristics shows every operating point the supply and resistors allow; the bias network chooses one point — the Q-point — on it, ideally mid-line so the output can swing symmetrically before clipping.",
+      "The enemy is β: it varies wildly between devices and with temperature. Fixed bias makes I_C proportional to β and is therefore unusable; the voltage-divider circuit fixes the base voltage and lets an emitter resistor set I_E ≈ (V_B − 0.7)/R_E, almost independent of β — the reason it is the default and the design used in this site's RC-amplifier lab experiment.",
+      "For signals, the transistor is replaced by a small-signal model: the rₑ model (rₑ = 25 mV/I_E) or the hybrid-π with g_m = I_C/V_T. These models turn amplifier analysis into resistor arithmetic — gain ≈ −R_C/rₑ for the bypassed CE stage — and connect the DC design directly to the AC performance.",
+    ],
+    "anx-m2": [
+      "The RC-coupled amplifier earns its name from the coupling capacitors that pass signal while blocking DC, letting stages cascade without disturbing each other's bias. Mid-band, capacitors are invisible and the gain is set by the collector load against rₑ; the trade for the FET version is lower gain but near-infinite input impedance.",
+      "The frequency response droops at both ends for different reasons. At low frequencies the coupling and bypass capacitors' reactance grows and steals signal — each RC pair contributes a cutoff near 1/2πRC. At high frequencies tiny device capacitances shunt the signal, made vicious by the Miller effect, which multiplies the feedback capacitance by the stage gain.",
+      "Bandwidth is read between the two −3 dB (half-power) points, exactly as measured in lab Expt 2/3. Multistage tricks manage the trade-offs: the Darlington pair multiplies current gain, the cascode neutralises Miller capacitance for wide bandwidth, and cascading stages multiplies gains (adds dBs) while shrinking overall bandwidth.",
+    ],
+    "anx-m3": [
+      "Negative feedback returns a fraction β of the output to oppose the input, and everything it does follows from one factor: 1 + Aβ. Gain drops by it — but so do distortion, noise and the effect of parameter drift, while bandwidth stretches by the same factor. Trading surplus gain for predictability is the central bargain of analog design.",
+      "Turn the phase around and the same loop oscillates: the Barkhausen criterion asks for loop gain of exactly one with zero net phase shift. RC oscillators build the phase from resistor–capacitor sections (three 60° sections in the phase-shift oscillator, a balanced bridge in the Wien), while LC and crystal oscillators resonate a tank — the crystal's absurdly high Q giving clock-grade stability.",
+      "Power amplifiers stop being 'small-signal': the output swings across the whole supply and efficiency matters. Class A conducts always (clean, ≤ 25 % practical efficiency), class B splits the wave between push-pull halves (78.5 % ideal, but crossover distortion at the handoff), and class AB biases just enough to smooth the handoff — the standard audio compromise.",
+    ],
+    "anx-m4": [
+      "The op-amp is feedback's perfect partner: gain so high that with negative feedback the two inputs are forced equal (virtual short) while drawing no current. Those two 'golden rules' reduce the inverting, non-inverting, summing and difference amplifiers to two-resistor arithmetic — and the same rules make R and C in the feedback path perform calculus, giving the integrator and differentiator.",
+      "Remove negative feedback and the op-amp becomes a comparator; add positive feedback and it becomes a Schmitt trigger, whose two thresholds (UTP/LTP) create hysteresis that cleans noisy signals into crisp edges. Practical limits — CMRR, offsets, finite gain–bandwidth and above all slew rate — decide how fast and how large the output can actually be.",
+      "The 555 timer packages two comparators, a flip-flop and a discharge switch around a ⅓/⅔·V_CC divider: let a capacitor shuttle between the thresholds and you get the astable clock (t = 0.69RC segments) or the one-shot monostable pulse (t_p = 1.1RC). Every one of these circuits runs live in the Analog Electronics Lab tab of this site.",
+    ],
+    "aids-m1": [
+      "AI frames problems as agents acting in environments: the agent perceives, decides, acts, and is judged by a performance measure — the PEAS description makes this concrete for any application. Environment properties (observable? deterministic? static?) predict how hard the problem will be.",
+      "Classical problem solving is search through a state space. Uninformed strategies differ only in which frontier node they expand next: BFS sweeps level by level (complete, optimal for unit costs, but exponential memory), DFS dives deep (cheap memory, no optimality), and iterative deepening cleverly combines them.",
+      "Informed search adds domain knowledge as a heuristic h(n) estimating the remaining cost. A* expands the node minimising f = g + h and is provably optimal when h never over-estimates (admissibility). Local search like hill climbing abandons paths altogether and just improves a current state — fast, memory-free, and prone to getting stuck on local maxima.",
+    ],
+    "aids-m2": [
+      "Machine learning replaces hand-written rules with functions fitted to data. In supervised learning the data comes labelled: regression fits continuous outputs, classification discrete ones. The fit is defined by a cost function — mean squared error for regression — and gradient descent walks the parameters downhill until the cost stops falling.",
+      "Each classifier embodies one idea. k-NN votes among the nearest training points; decision trees split on the feature giving the largest information gain (entropy drop); Naïve Bayes multiplies per-feature probabilities under an independence assumption; logistic regression squeezes a linear score through a sigmoid to output probability.",
+      "The honest part is evaluation. A model can memorise training data (overfit) or be too simple to learn it (underfit) — the bias–variance trade-off — so performance is always measured on data the model has never seen, via train/test splits or cross-validation, and reported with metrics that match the problem: precision when false alarms are costly, recall when misses are.",
+    ],
+    "aids-m3": [
+      "Real data arrives dirty: missing entries, typos, impossible values, wild outliers. The data-science lifecycle therefore spends most of its effort before modelling — cleaning, imputing, and flagging outliers with rules like the 1.5 × IQR fences — because a model can only be as good as the table it is fed.",
+      "Features measured on different scales distort any algorithm that computes distances or gradients, so numeric columns are standardised (z-scores) or min–max scaled, and categorical columns encoded into numbers. Exploratory data analysis then interrogates the data visually — histograms for shape, box plots for spread and outliers, scatter plots and correlation for relationships — before a single model is trained.",
+      "Descriptive statistics compress a column into a few honest numbers: centre (mean vs the outlier-resistant median), spread (σ, IQR) and association (Pearson's r). The Python stack — NumPy arrays, pandas DataFrames, matplotlib charts — is the standard vehicle for all of it.",
+    ],
+    "aids-m4": [
+      "Without labels, learning becomes pattern discovery. k-means is the canonical example: pick k centres, assign every point to its nearest centre, move each centre to its cluster's mean, repeat — a two-step loop that minimises within-cluster distance. Similarity measures are the quiet foundation: Euclidean distance for positions, cosine similarity for directions (documents, ratings, recommendations).",
+      "The application landscape — language (NLP), vision, recommenders — matters to an EEE student mostly through its power-system uses: load forecasting, fault classification, predictive maintenance and smart-grid optimisation are all straight applications of the Module 2 toolkit.",
+      "Responsible AI is now examinable material: models inherit bias from their training data, leak privacy, and can be un-explainable black boxes. The remedies — representative data, fairness metrics, explainability tools, human accountability — are as much a part of the syllabus as the algorithms.",
+    ],
+    "eco-m1": [
+      "Economics begins with scarcity: wants exceed resources, so every choice costs the best alternative foregone (opportunity cost). Demand and supply summarise how buyers and sellers respond to price, and their intersection sets the market equilibrium; drawing the distinction between moving along a curve (price changed) and shifting it (anything else changed) prevents the classic exam error.",
+      "Elasticity turns 'demand falls when price rises' into a measurable number — the percentage response of quantity to a 1 % price change — which immediately predicts revenue: raise price on an inelastic good and revenue rises; on an elastic one it falls.",
+      "On the supply side, production converts inputs to output under diminishing returns, and the cost family (fixed, variable, marginal, average) describes the money side of that process. Market structure — from perfect competition to monopoly — then decides how much of the cost picture the firm can pass into price.",
+    ],
+    "eco-m2": [
+      "National income accounting measures an economy's output: GDP counts production within borders, GNP adds net income earned abroad, and NNP subtracts depreciation. The same total can be computed three ways — production, income, expenditure — and separating real from nominal growth requires deflating by a price index.",
+      "Inflation is a sustained rise in the general price level, driven from the demand side (too much spending chasing goods) or the cost side (input prices pushing up). The central bank leans against it with monetary policy — policy rates, reserve ratios — while the government's fiscal policy works through taxes and spending.",
+      "Money itself is defined by its functions (medium of exchange, unit of account, store of value), and commercial banks multiply it through credit creation. International linkages appear through the balance of payments and exchange rates, which transmit the same demand-and-supply logic across borders.",
+    ],
+    "eco-m3": [
+      "A rupee today outranks a rupee next year because today's rupee can earn interest — that is the time value of money, and engineering economics is the discipline of comparing cash flows that happen at different times. The cash-flow diagram is the non-negotiable first step: every arrow placed correctly is half the problem solved.",
+      "Compound interest is the conversion engine: F = P(1+i)ⁿ moves single amounts forward, its reciprocal moves them back, and the annuity factors translate between a lump sum and an equal yearly series (capital recovery and sinking fund). With those four factors, any stream of payments can be collapsed to one number at one date.",
+      "Comparing alternatives means collapsing each to the same date — present worth, future worth or annual equivalent — over the same study period. Rate of return asks the inverse question (what interest rate makes the project break even?) and payback measures crude speed of recovery.",
+    ],
+    "eco-m4": [
+      "Assets wear out, and depreciation spreads their cost over their working life. Straight-line writes off equal slices; declining balance front-loads the write-off by taking a constant percentage of the shrinking book value; sum-of-years-digits sits between; sinking-fund reserves equal deposits that grow to the replacement cost. The method chosen changes yearly profit, not physical reality.",
+      "Break-even analysis splits costs into fixed (paid regardless) and variable (per unit). Each unit sold contributes s − v toward the fixed block, so the break-even point is simply F/(s − v); beyond it every unit's contribution is profit, and the margin of safety measures how far sales can slip before losses begin — all visible on one chart of cost and revenue lines.",
+      "Public projects replace profit with the benefit–cost ratio: discount all benefits and all costs to present worth and accept when B/C ≥ 1. Make-or-buy decisions apply the same marginal logic inside the firm.",
+    ],
+    "eth-m1": [
+      "Morals are the standards a person actually holds; ethics is the systematic study of which standards are justified. Engineering ethics matters because engineers' decisions are amplified by technology — a single design judgment can affect thousands of users who never consented to the risk.",
+      "Kohlberg mapped how moral reasoning matures: from obeying rules to avoid punishment (pre-conventional), to conforming with peers and law (conventional), to reasoning from self-chosen universal principles (post-conventional). Gilligan's critique added the care perspective — moral maturity as growing responsibility within relationships — and the contrast between the two is a standing exam question.",
+      "A moral dilemma is a situation where genuine obligations conflict, and moral autonomy is the capacity to think through such conflicts independently rather than defaulting to authority. Identifying the competing obligations explicitly is what a good dilemma answer demonstrates.",
+    ],
+    "eth-m2": [
+      "Every engineered product is an experiment on society: knowledge is partial, models approximate, and the 'subjects' are users who rarely gave informed consent. Framing engineering as social experimentation makes the engineer a responsible experimenter — obliged to monitor outcomes, disclose risks and respect the public's right to know.",
+      "Codes of ethics published by professional bodies distil these duties: hold public safety paramount, act within competence, avoid conflicts of interest, be honest. Codes inspire and protect, but they are frameworks, not algorithms — the classic disasters (Bhopal's maintenance decay, Challenger's overridden engineers, Chernobyl's test culture) are studied precisely because codes existed and failed at the human layer.",
+      "Risk is probability times severity of harm, and a risk becomes acceptable only when those exposed understand it and share its benefits justly. When internal channels fail on a serious hazard, whistle-blowing can become a duty — justified by seriousness, exhausted channels and documented evidence. Professional rights (conscientious refusal, fair treatment) and IPR round out the engineer's legal-ethical toolkit.",
+    ],
+    "eth-m3": [
+      "The Brundtland definition — development that meets present needs without compromising future generations' ability to meet theirs — makes sustainability a fairness principle across time. It stands on three interlocking pillars: environmental integrity, economic viability and social equity; weaken any one and the stool tips.",
+      "The 17 Sustainable Development Goals operationalise the idea, and grouping them as the five Ps (People, Planet, Prosperity, Peace, Partnership) makes them rememberable. Behind the goals sit the pressure indicators: climate change, resource depletion, pollution and biodiversity loss.",
+      "Carrying capacity is the load an ecosystem can support indefinitely; the ecological footprint measures the load we actually impose. Humanity's footprint exceeding the planet's biocapacity — overshoot — is the quantitative statement of the sustainability problem, and equity (between and within generations) is its ethical core.",
+    ],
+    "eth-m4": [
+      "Sustainable engineering translates the framework into design decisions: renewable energy sources and efficiency to cut the energy footprint, green-building principles for the built environment, and cleaner transport systems. The engineer's lever is the design stage — most of a product's lifetime impact is locked in before manufacture begins.",
+      "The circular economy replaces take–make–dispose with loops: refuse, reduce, reuse, repurpose, recycle. Life-cycle analysis is its measuring instrument, tracking impacts from raw material through manufacture and use to end-of-life ('cradle to grave'), exposing where the real damage happens — often not where intuition says.",
+      "Environmental legislation and impact assessment institutionalise the checks, while 'appropriate technology' reminds designers that the best solution fits local resources, skills and needs. Mapping each design choice to a numbered SDG is both good practice and good exam technique.",
+    ],
+  };
+
   /* ---------------- renderer ---------------- */
   const esc = s => s; // content is authored, not user input
 
   function moduleArticle(sub, m, i) {
+    const th = THEORY[`${sub.id}-m${i + 1}`] || [];
     return `
     <article class="exp" id="${sub.id}-m${i + 1}">
       <div class="exp-head">
         <span class="kicker">${esc(sub.name)} · S3 EEE · KTU 2024 Scheme</span>
         <h2>${esc(m.title)}</h2>
       </div>
+      ${th.length ? `<div class="card"><h3>Theory &amp; Explanation</h3>${th.map(p => `<p>${esc(p)}</p>`).join("")}</div>` : ""}
       <div class="card"><h3>Key Topics</h3>
         <ul>${m.topics.map(t => `<li>${esc(t)}</li>`).join("")}</ul>
       </div>

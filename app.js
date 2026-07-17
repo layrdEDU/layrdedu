@@ -141,7 +141,11 @@
     cfg._render = render;
     render();
   }
-  function redrawAll() { Object.values(TABLES).forEach(t => t._render && t._render()); Object.values(SIMS).forEach(fn => fn()); }
+  function redrawAll() {
+    Object.values(TABLES).forEach(t => t._render && t._render());
+    Object.values(SIMS).forEach(fn => { try { fn(); } catch (_) { } });
+    (window.STUDY_SIMS || []).forEach(fn => { try { fn(); } catch (_) { } });
+  }
 
   /* ================= generic calculator widgets =================
      <div class="calc" data-calc="id"> with inputs[name] ; CALCS[id](values)->outHTML */

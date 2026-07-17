@@ -58,11 +58,12 @@
       return { ...s, pts: s.sort === false ? pts : pts.sort((a, b) => a[0] - b[0]) };
     }).filter(s => s.pts.length);
 
-    // legend (only when ≥ 2 series; single series is named by the panel title)
-    if (series.length >= 2) {
+    // legend (only when ≥ 2 named series; unnamed series belong to a named family)
+    const named = series.filter(s => s.name);
+    if (named.length >= 2) {
       const lg = document.createElement("div");
       lg.className = "legend";
-      series.forEach(s => {
+      named.forEach(s => {
         const it = document.createElement("span");
         it.innerHTML = `<span class="sw" style="background:${s.color}"></span>${s.name}`;
         lg.appendChild(it);
@@ -163,6 +164,7 @@
       const xv = xmin + (m.x - P.l) / (W - P.l - P.r) * (xmax - xmin);
       let lines = [], anyX = null;
       series.forEach((s, i) => {
+        if (!s.name) return; // family curves (unnamed) stay out of the tooltip
         let best = null, bd = Infinity;
         s.pts.forEach(p => { const d = Math.abs(p[0] - xv); if (d < bd) { bd = d; best = p; } });
         if (best) {
