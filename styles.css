@@ -302,6 +302,36 @@ td .rowdel:hover { color: var(--bad); background: var(--surface-2); }
 }
 .chart-tip b { font-weight: 700; }
 
+/* concept-diagram titles */
+.fig-t {
+  margin: 16px 0 4px; font-weight: 600; font-size: 14px; color: var(--ink);
+  display: flex; align-items: center; gap: 8px;
+}
+.fig-t::before { content: ""; width: 4px; height: 16px; border-radius: 2px; background: var(--accent); flex-shrink: 0; }
+
+/* worked examples */
+.ex { border: 1px solid var(--border); border-radius: 10px; margin: 12px 0; overflow: hidden; background: var(--surface); }
+.ex-q { padding: 10px 14px; font-weight: 600; background: var(--surface-2); color: var(--ink); font-size: 13.5px; line-height: 1.5; }
+.ex-n {
+  display: inline-block; background: var(--accent); color: #fff; font-size: 10px; font-weight: 700;
+  border-radius: 999px; padding: 2px 10px; margin-right: 9px; letter-spacing: .07em; text-transform: uppercase;
+}
+.ex-s {
+  padding: 10px 14px; font-family: var(--mono); font-size: 12.5px; line-height: 1.85;
+  color: var(--ink-2); white-space: pre-line; border-top: 1px solid var(--grid); overflow-x: auto;
+}
+.ex-a {
+  padding: 9px 14px; border-top: 1px dashed var(--border); font-size: 13px; font-weight: 600;
+  color: var(--good); background: color-mix(in srgb, var(--good) 6%, var(--surface));
+}
+.ex-t { padding: 9px 14px; border-top: 1px dashed var(--border); font-size: 12.5px; color: var(--ink-2); background: var(--accent-soft); line-height: 1.6; }
+.ex-t b { color: var(--accent); }
+@media (max-width: 700px) {
+  .ex-q { font-size: 12.5px; padding: 9px 12px; }
+  .ex-s { font-size: 11.5px; padding: 9px 12px; }
+  .ex-a, .ex-t { font-size: 12px; padding: 8px 12px; }
+}
+
 /* reference images hotlinked from Wikimedia Commons */
 .webimg { margin: 12px 0 6px; text-align: center; }
 .webimg img {

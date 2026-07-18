@@ -681,19 +681,95 @@
     }];
   })();
 
+  /* ---------- second-round diagrams ---------- */
+  (() => { // cn-m1 extra: mesh currents vs node voltage on one circuit
+    let b = "";
+    // battery in the left vertical wire
+    b += line(70, 60, 70, 104, { c: INK }) + line(58, 104, 82, 104, { c: INK, w: 2.2 }) + line(63, 112, 77, 112, { c: INK, w: 2.2 }) + line(70, 112, 70, 170, { c: INK });
+    b += txt(48, 112, "5 V", { mono: true, fs: 11, c: INK, anchor: "end" });
+    // top wire with 2 Ω, then node A feeding two 1 Ω legs
+    b += line(70, 60, 120, 60, { c: INK }) + res(120, 60, 55, "h") + txt(147, 42, "2 Ω", { anchor: "middle", mono: true, fs: 11, c: INK });
+    b += line(175, 60, 480, 60, { c: INK });
+    b += dot(300, 60, GRN, 6) + txt(300, 42, "node A · V_A = 1 V", { anchor: "middle", mono: true, fs: 11.5, c: GRN, b: true });
+    b += res(300, 60, 55, "v") + txt(316, 92, "1 Ω", { mono: true, fs: 11, c: INK });
+    b += line(300, 115, 300, 170, { c: INK });
+    b += res(420, 60, 55, "v") + txt(436, 92, "1 Ω", { mono: true, fs: 11, c: INK });
+    b += line(420, 115, 420, 170, { c: INK }) + line(480, 60, 480, 170, { c: INK, w: 0 });
+    b += line(70, 170, 480, 170, { c: INK }) + txt(490, 174, "0 V (ref)", { fs: 10.5, c: MUT });
+    // mesh-current loops
+    [[185, 118, "I₁ = 2 A"], [360, 118, "I₂ = 1 A"]].forEach(([cx, cy, lb]) => {
+      b += `<path d="M ${cx - 26} ${cy} A 26 26 0 1 1 ${cx} ${cy - 26}" fill="none" stroke="${ACC}" stroke-width="2"/>` + head(cx, cy - 26, 0, ACC, 6);
+      b += txt(cx, cy + 6, lb, { anchor: "middle", mono: true, fs: 11, c: ACC, b: true });
+    });
+    VIS["cn-m1"].push({
+      t: "Mesh vs node — same circuit, pick the cheaper method",
+      cap: "Two clockwise mesh currents (2 equations by inspection) or one node voltage at A (1 equation). Count the unknowns first, then choose — the worked example below solves it both ways.",
+      svg: svg(195, b),
+    });
+  })();
+
+  (() => { // cn-m3 extra: s-plane pole positions → time behaviour
+    let b = `<rect x="60" y="30" width="220" height="160" fill="color-mix(in srgb, var(--good) 7%, transparent)"/>`;
+    b += `<rect x="280" y="30" width="220" height="160" fill="color-mix(in srgb, var(--bad) 7%, transparent)"/>`;
+    b += arrow(50, 110, 512, 110, { c: MUT }) + txt(516, 114, "σ", { fs: 12, c: MUT });
+    b += arrow(280, 195, 280, 22, { c: MUT }) + txt(288, 30, "jω", { fs: 12, c: MUT });
+    b += txt(165, 46, "LEFT half — stable", { anchor: "middle", fs: 11, c: GRN, b: true });
+    b += txt(390, 46, "RIGHT half — unstable", { anchor: "middle", fs: 11, c: PNK, b: true });
+    b += cross(170, 75, GRN) + cross(170, 145, GRN);
+    b += cross(390, 75, PNK) + cross(390, 145, PNK);
+    b += cross(280, 60, INK) + cross(280, 160, INK);
+    b += poly(wave(115, 75, 70, 20, u => Math.exp(-2.5 * u) * Math.cos(15 * u)), { c: GRN, w: 1.6 });
+    b += poly(wave(415, 75, 70, 7, u => Math.exp(1.8 * u) * Math.cos(15 * u)), { c: PNK, w: 1.6 });
+    b += poly(wave(300, 160, 70, 14, u => Math.cos(15 * u)), { c: INK2, w: 1.6 });
+    b += txt(371, 184, "jω axis: sustained oscillation", { fs: 10.5, c: INK2 });
+    VIS["cn-m3"].push({
+      t: "The s-plane is a map of time behaviour",
+      cap: "Where a pole sits tells you the response before you invert anything: left half decays, right half grows, the imaginary axis rings forever. Distance from the axis sets the speed.",
+      svg: svg(215, b),
+    });
+  })();
+
+  (() => { // aids-m2 extra: gradient descent on loss contours
+    let b = "";
+    [150, 112, 76, 42].forEach(r => {
+      b += `<ellipse cx="330" cy="115" rx="${r}" ry="${r * 0.55}" fill="none" stroke="${GRID}" stroke-width="1.4"/>`;
+    });
+    b += txt(330, 205, "contours of the loss L(w₁, w₂)", { anchor: "middle", fs: 11, c: MUT });
+    const steps = [[195, 45], [300, 172], [385, 78], [305, 140], [352, 98], [330, 115]];
+    for (let i = 0; i < steps.length - 1; i++) {
+      b += arrow(steps[i][0], steps[i][1], steps[i + 1][0], steps[i + 1][1], { c: ACC, w: 2, r: 6 });
+    }
+    steps.slice(0, -1).forEach(p => { b += dot(p[0], p[1], ACC, 4); });
+    b += dot(330, 115, GRN, 6) + txt(330, 100, "minimum", { anchor: "middle", fs: 11, c: GRN, b: true });
+    b += txt(80, 60, "w ← w − η·∇L", { mono: true, fs: 13, c: INK, b: true });
+    b += txt(80, 80, "η too big → overshoot zig-zag", { fs: 10.5, c: MUT });
+    b += txt(80, 96, "η too small → crawls forever", { fs: 10.5, c: MUT });
+    VIS["aids-m2"].push({
+      t: "Gradient descent — downhill on the loss surface",
+      cap: "Each step moves against the gradient; the learning rate η sets the stride. Every regression and neural network in this module trains with some flavour of this walk.",
+      svg: svg(220, b),
+    });
+  })();
+
   /* =========================================================
      reference images — freely licensed diagrams hotlinked from
      Wikimedia Commons (every file verified to exist), credited
      and linked back to its source page
      ========================================================= */
   const IMG = {
-    "m3-m1": [["Fourier series square wave circles animation.gif", "Rotating phasors — one circle per harmonic — trace out the square wave"]],
+    "m3-m1": [
+      ["Fourier series square wave circles animation.gif", "Rotating phasors — one circle per harmonic — trace out the square wave"],
+      ["Sawtooth Fourier Animation.gif", "Sawtooth synthesis — watch the Gibbs horns persist at the jump no matter how many terms join"],
+    ],
     "m3-m2": [["Fourier transform time and frequency domains (small).gif", "The same signal seen in the time domain (red) and the frequency domain (blue)"]],
     "m3-m3": [["Conformal map.svg", "A rectangular grid and its image under a conformal map — angles survive, shapes bend"]],
     "cn-m1": [["Thevenin equivalent circuit.svg", "Any linear one-port reduced to its Thévenin equivalent"]],
     "cn-m2": [["Series RC capacitor voltage.svg", "Capacitor voltage during charging — the exponential every transient problem hides"]],
     "dcm-m1": [["B-H loop.png", "The hysteresis (B–H) loop — the area inside is energy lost per magnetisation cycle"]],
-    "dcm-m2": [["Animation einer Gleichstrommaschine (Variante).gif", "A DC machine turning: commutator segments reverse the rotor current every half revolution"]],
+    "dcm-m2": [
+      ["Animation einer Gleichstrommaschine (Variante).gif", "A DC machine turning: commutator segments reverse the rotor current every half revolution"],
+      ["Fleming's Left Hand Rule.png", "Fleming's left hand — index Field, middle Current, thumb thrust (Force)"],
+    ],
     "dcm-m3": [["Transformer3d col3.svg", "Transformer construction — primary and secondary windings share one laminated core"]],
     "dcm-m4": [["3 phase AC waveform.svg", "Three phases displaced by 120° — the waveform behind every star/delta question"]],
     "anx-m2": [["Bandwidth 2.svg", "Bandwidth between the −3 dB (half-power) points"]],
@@ -706,10 +782,14 @@
     "aids-m2": [
       ["Linear regression.svg", "Least-squares regression — the line that minimises squared vertical errors"],
       ["Overfitting.svg", "The green boundary memorises noise; the black one will generalise better"],
+      ["Gradient descent.gif", "Gradient descent in action — the fit improves as the loss walks downhill"],
     ],
     "aids-m3": [["CRISP-DM Process Diagram.png", "CRISP-DM — the industry-standard data science cycle"]],
     "aids-m4": [["K-means convergence.gif", "k-means converging: assignments and centroids update until stable"]],
-    "eco-m1": [["Supply-demand-equilibrium.svg", "Supply and demand — equilibrium price and quantity at the intersection"]],
+    "eco-m1": [
+      ["Supply-demand-equilibrium.svg", "Supply and demand — equilibrium price and quantity at the intersection"],
+      ["Elasticity-elastic.png", "An elastic demand curve — a small price change moves quantity a lot"],
+    ],
     "eco-m2": [["Circular flow of goods income.png", "The circular flow of goods and income between households and firms"]],
     "eco-m3": [["Compound Interest with Varying Frequencies.svg", "Compound interest — the same principal at different compounding frequencies"]],
     "eco-m4": [["CVP-TC-Sales-PL-BEP.svg", "Cost–volume–profit chart: the break-even point is where total cost meets sales"]],
@@ -730,7 +810,7 @@
     if (!art) return;
     let h = "<h3>Concept Diagrams — see the idea</h3>";
     (VIS[id] || []).forEach(v => {
-      h += `<p style="margin:10px 0 4px;font-weight:600">${v.t}</p>` +
+      h += `<p class="fig-t">${v.t}</p>` +
         `<div class="schematic">${v.svg}${v.cap ? `<div class="cap">${v.cap}</div>` : ""}</div>`;
     });
     (IMG[id] || []).forEach(([file, cap]) => {
